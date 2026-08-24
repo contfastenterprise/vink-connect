@@ -33,6 +33,23 @@ export async function saveLeadAction(formData: FormData) {
     return { error: 'Ocurrió un error al guardar tus datos. Intenta nuevamente.' };
   }
 
+  // Guardar suscripción push si existe
+  const push_subscription = formData.get('push_subscription') as string;
+  if (push_subscription) {
+    try {
+      const parsedSub = JSON.parse(push_subscription);
+      await supabase.from('push_subscriptions').insert([{
+        card_id,
+        lead_id: null, // Opcional: si quieres vincularlo al lead
+        endpoint: parsedSub.endpoint,
+        p256dh: parsedSub.keys.p256dh,
+        auth: parsedSub.keys.auth
+      }]);
+    } catch (err) {
+      console.error('Error parsing or saving push subscription:', err);
+    }
+  }
+
   revalidatePath('/');
   return { success: true };
 }

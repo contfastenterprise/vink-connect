@@ -13,13 +13,50 @@ export function LeadForm({ cardId }: LeadFormProps) {
   const [status, setStatus] = useState<'idle' | 'success' | 'error'>('idle');
   const [errorMessage, setErrorMessage] = useState('');
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const urlBase64ToUint8Array = (base64String: string) => {
+    const padding = '='.repeat((4 - base64String.length % 4) % 4);
+    const base64 = (base64String + padding)
+      .replace(/\-/g, '+')
+      .replace(/_/g, '/');
+    const rawData = window.atob(base64);
+    const outputArray = new Uint8Array(rawData.length);
+    for (let i = 0; i < rawData.length; ++i) {
+      outputArray[i] = rawData.charCodeAt(i);
+    }
+    return outputArray;
+  };
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const formData = new FormData(e.currentTarget);
     formData.append('card_id', cardId);
 
+    const wantsPush = formData.get('subscribe_push') === 'on';
+
     startTransition(async () => {
       setStatus('idle');
+      
+      // Intentar suscribir a notificaciones push si el usuario lo marcó
+      if (wantsPush && 'serviceWorker' in navigator && 'PushManager' in window) {
+        try {
+          const registration = await navigator.serviceWorker.register('/sw.js');
+          const permission = await Notification.requestPermission();
+          
+          if (permission === 'granted') {
+            const vapidPublicKey = process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY;
+            if (vapidPublicKey) {
+              const subscription = await registration.pushManager.subscribe({
+                userVisibleOnly: true,
+                applicationServerKey: urlBase64ToUint8Array(vapidPublicKey)
+              });
+              formData.append('push_subscription', JSON.stringify(subscription));
+            }
+          }
+        } catch (err) {
+          console.error('Push subscription failed:', err);
+        }
+      }
+
       const result = await saveLeadAction(formData);
       if (result.error) {
         setStatus('error');
@@ -113,6 +150,19 @@ export function LeadForm({ cardId }: LeadFormProps) {
                 className="w-full px-4 py-3 rounded-xl bg-surface-container border border-white/10 focus:border-primary/50 focus:ring-1 focus:ring-primary/50 focus:outline-none transition duration-150 ease-out font-body-md text-on-surface resize-none"
                 placeholder="Un placer conocerte..."
               />
+            </div>
+
+            <div className="flex items-start gap-3 mt-2 mb-2">
+              <input 
+                type="checkbox" 
+                id="subscribe_push" 
+                name="subscribe_push" 
+                defaultChecked
+                className="mt-1 w-4 h-4 rounded bg-surface-container border-white/10 text-primary focus:ring-primary/50"
+              />
+              <label htmlFor="subscribe_push" className="font-body-sm text-xs text-on-surface-variant leading-tight">
+                Quiero recibir notificaciones sobre ofertas, promociones y actualizaciones exclusivas de esta tarjeta.
+              </label>
             </div>
 
             {status === 'error' && (
