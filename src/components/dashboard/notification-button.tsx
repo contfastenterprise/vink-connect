@@ -52,45 +52,45 @@ export function NotificationButton({ cardId }: Props) {
       </button>
 
       {isOpen && (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center bg-background/80 backdrop-blur-sm p-4">
-          <div className="bg-surface-container-high border border-white/10 rounded-2xl p-6 w-full max-w-md shadow-2xl animate-in fade-in zoom-in-95">
-            <div className="flex justify-between items-center mb-4">
+        <div className="fixed inset-0 z-[100] flex items-center justify-center bg-background/80 backdrop-blur-md p-4 animate-in fade-in">
+          <div className="glass-panel rounded-2xl p-6 w-full max-w-md shadow-2xl animate-in zoom-in-95">
+            <div className="flex justify-between items-center mb-5">
               <h3 className="font-headline-sm text-xl text-on-surface">Enviar Notificación Push</h3>
               <button 
                 onClick={() => setIsOpen(false)}
-                className="w-8 h-8 flex items-center justify-center rounded-full hover:bg-white/10 text-on-surface-variant transition"
+                className="w-8 h-8 flex items-center justify-center rounded-full hover:bg-surface-container-highest text-on-surface-variant transition"
               >
                 <span className="material-symbols-outlined text-[20px]">close</span>
               </button>
             </div>
             
-            <p className="text-sm font-body-sm text-on-surface-variant mb-6">
+            <p className="text-sm font-body-sm text-on-surface-variant mb-6 leading-relaxed">
               Este mensaje aparecerá en la pantalla principal del celular de todos tus contactos que hayan aceptado recibir notificaciones.
             </p>
 
             <form onSubmit={handleSend} className="space-y-4">
-              <div className="space-y-1">
-                <label htmlFor="title" className="font-label-sm text-xs text-on-surface-variant">Título de la oferta</label>
+              <div className="space-y-1.5">
+                <label htmlFor="title" className="font-label-sm text-xs font-semibold text-on-surface-variant uppercase tracking-wider">Título de la oferta</label>
                 <input 
                   required
                   type="text" 
                   id="title" 
                   name="title" 
                   maxLength={50}
-                  className="w-full px-4 py-3 rounded-xl bg-surface-container border border-white/10 focus:border-primary/50 focus:ring-1 focus:ring-primary/50 focus:outline-none transition text-on-surface font-body-md"
+                  className="w-full px-4 py-3 rounded-xl bg-surface-container border border-outline-variant focus:border-primary focus:ring-1 focus:ring-primary focus:outline-none transition text-on-surface font-body-md"
                   placeholder="¡20% de Descuento!"
                 />
               </div>
 
-              <div className="space-y-1">
-                <label htmlFor="body" className="font-label-sm text-xs text-on-surface-variant">Mensaje corto</label>
+              <div className="space-y-1.5">
+                <label htmlFor="body" className="font-label-sm text-xs font-semibold text-on-surface-variant uppercase tracking-wider">Mensaje corto</label>
                 <textarea 
                   required
                   id="body" 
                   name="body"
                   rows={3} 
                   maxLength={120}
-                  className="w-full px-4 py-3 rounded-xl bg-surface-container border border-white/10 focus:border-primary/50 focus:ring-1 focus:ring-primary/50 focus:outline-none transition text-on-surface font-body-md resize-none"
+                  className="w-full px-4 py-3 rounded-xl bg-surface-container border border-outline-variant focus:border-primary focus:ring-1 focus:ring-primary focus:outline-none transition text-on-surface font-body-md resize-none"
                   placeholder="Aprovecha esta promoción exclusiva mostrando esta notificación en el local..."
                 />
               </div>
@@ -98,7 +98,7 @@ export function NotificationButton({ cardId }: Props) {
               <button 
                 type="submit" 
                 disabled={isPending}
-                className="w-full py-3 mt-4 rounded-xl bg-primary text-on-primary font-label-md transition active:scale-[0.97] shadow-lg hover:opacity-90 flex justify-center items-center gap-2 disabled:opacity-50"
+                className="w-full py-3.5 mt-6 rounded-xl btn-primary-glow text-white font-label-md transition active:scale-[0.97] flex justify-center items-center gap-2 disabled:opacity-50"
               >
                 {isPending ? (
                   <span className="material-symbols-outlined animate-spin text-[18px]">refresh</span>
