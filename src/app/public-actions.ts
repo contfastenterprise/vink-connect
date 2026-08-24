@@ -35,3 +35,17 @@ export async function saveLeadAction(formData: FormData) {
 
   return { success: true };
 }
+
+export async function trackViewAction(cardId: string) {
+  const supabase = await createClient();
+
+  // Call the custom RPC function to increment views
+  const { error } = await supabase.rpc('increment_card_views', { card_id_param: cardId });
+
+  if (error) {
+    console.error('Error incrementing view count:', error);
+    return { error: 'Ocurrió un error al registrar la visita.' };
+  }
+
+  return { success: true };
+}

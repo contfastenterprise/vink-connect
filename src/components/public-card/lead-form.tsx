@@ -72,6 +72,7 @@ export function LeadForm({ cardId }: LeadFormProps) {
                 type="text" 
                 id="visitor_name" 
                 name="visitor_name" 
+                autoComplete="name"
                 className="w-full px-4 py-3 rounded-xl bg-surface-container border border-white/10 focus:border-primary/50 focus:ring-1 focus:ring-primary/50 focus:outline-none transition duration-150 ease-out font-body-md text-on-surface"
                 placeholder="Tu nombre"
               />
@@ -84,6 +85,7 @@ export function LeadForm({ cardId }: LeadFormProps) {
                   type="email" 
                   id="visitor_email" 
                   name="visitor_email" 
+                  autoComplete="email"
                   className="w-full px-4 py-3 rounded-xl bg-surface-container border border-white/10 focus:border-primary/50 focus:ring-1 focus:ring-primary/50 focus:outline-none transition duration-150 ease-out font-body-md text-on-surface"
                   placeholder="tucorreo@ejemplo.com"
                 />
@@ -95,6 +97,7 @@ export function LeadForm({ cardId }: LeadFormProps) {
                   type="tel" 
                   id="visitor_phone" 
                   name="visitor_phone" 
+                  autoComplete="tel"
                   className="w-full px-4 py-3 rounded-xl bg-surface-container border border-white/10 focus:border-primary/50 focus:ring-1 focus:ring-primary/50 focus:outline-none transition duration-150 ease-out font-body-md text-on-surface"
                   placeholder="+1 234 567 890"
                 />

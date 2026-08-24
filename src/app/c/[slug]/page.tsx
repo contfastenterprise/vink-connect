@@ -1,6 +1,7 @@
 import { Card } from '@/types';
 import { createClient } from '@/utils/supabase/server';
 import { LeadForm } from '@/components/public-card/lead-form';
+import { ViewTracker } from '@/components/public-card/view-tracker';
 
 // Fetch card from Supabase
 async function getCardBySlug(slug: string): Promise<Card | null> {
@@ -62,6 +63,9 @@ export default async function PublicCardPage({ params }: { params: Promise<{ slu
             pointer-events: none;
         }
       `}} />
+
+      {/* Tracker de Vistas (No visible) */}
+      <ViewTracker cardId={card.id} />
 
       {/* TopAppBar */}
       <header className="fixed top-0 w-full z-50 bg-surface/80 dark:bg-surface/80 backdrop-blur-lg border-b border-white/10 shadow-sm flex justify-between items-center px-margin-mobile md:px-margin-desktop h-16 max-w-[600px] mx-auto left-0 right-0">
