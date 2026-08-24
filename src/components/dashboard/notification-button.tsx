@@ -22,11 +22,14 @@ export function NotificationButton({ cardId }: Props) {
     setMounted(true);
   }, []);
 
+  const [errorMsg, setErrorMsg] = useState('');
+
   const openModal = () => {
     if (dialogRef.current) {
       dialogRef.current.showModal();
       document.body.style.overflow = 'hidden'; // Evitar scroll de fondo
       setIsSuccess(false);
+      setErrorMsg('');
     }
   };
 
@@ -35,6 +38,7 @@ export function NotificationButton({ cardId }: Props) {
       dialogRef.current.close();
       document.body.style.overflow = '';
       setIsSuccess(false);
+      setErrorMsg('');
     }
   };
 
@@ -47,14 +51,16 @@ export function NotificationButton({ cardId }: Props) {
 
   const handleSend = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    setErrorMsg('');
     if (!cardId) {
-      toast.error('Selecciona una tarjeta primero');
+      setErrorMsg('Selecciona una tarjeta primero');
       return;
     }
 
     startTransition(async () => {
       const result = await sendPushNotificationAction(cardId, title, body, '');
       if (result.error) {
+        setErrorMsg(result.error);
         toast.error(result.error);
       } else {
         setIsSuccess(true);
@@ -182,6 +188,13 @@ export function NotificationButton({ cardId }: Props) {
                 placeholder="Ej: Muestra esta notificación en caja para aplicar el descuento..."
               />
             </div>
+
+            {/* Error Message */}
+            {errorMsg && (
+              <div className="bg-error/10 border border-error/20 text-error px-4 py-3 rounded-xl text-sm font-medium animate-in fade-in zoom-in-95 duration-200">
+                {errorMsg}
+              </div>
+            )}
 
             {/* Botón de Enviar */}
             <button 
