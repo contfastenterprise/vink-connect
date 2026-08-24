@@ -65,10 +65,14 @@ export function LeadForm({ cardId }: LeadFormProps) {
       }
 
       const result = await saveLeadAction(formData);
+
       if (result.error) {
         setStatus('error');
         setErrorMessage(result.error);
       } else {
+        if (result.pushError) {
+          alert('El contacto se guardó, pero hubo un error en la base de datos de notificaciones: ' + result.pushError);
+        }
         setStatus('success');
       }
     });

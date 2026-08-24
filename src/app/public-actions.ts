@@ -33,6 +33,8 @@ export async function saveLeadAction(formData: FormData) {
     return { error: 'Ocurrió un error al guardar tus datos. Intenta nuevamente.' };
   }
 
+  let pushErrorMessage = null;
+
   // Guardar suscripción push si existe
   const push_subscription = formData.get('push_subscription') as string;
   if (push_subscription) {
@@ -48,14 +50,16 @@ export async function saveLeadAction(formData: FormData) {
       
       if (pushError) {
         console.error('Supabase Push Insert Error:', pushError);
+        pushErrorMessage = pushError.message;
       }
     } catch (err) {
       console.error('Error parsing push subscription JSON:', err);
+      pushErrorMessage = 'Error interno procesando suscripción.';
     }
   }
 
   revalidatePath('/');
-  return { success: true };
+  return { success: true, pushError: pushErrorMessage };
 }
 
 export async function trackViewAction(cardId: string) {
