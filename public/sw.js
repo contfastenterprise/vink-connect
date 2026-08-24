@@ -4,13 +4,12 @@ self.addEventListener('push', function (event) {
       const data = event.data.json();
       const options = {
         body: data.body || 'Tienes una nueva notificación',
-        icon: data.icon || '/icon.png',
-        badge: '/badge.png',
         vibrate: [200, 100, 200, 100, 200, 100, 200],
         data: { url: data.url || '/' },
       };
       
       if (data.icon) {
+        options.icon = data.icon;
         options.image = data.icon;
       }
       

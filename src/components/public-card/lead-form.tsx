@@ -43,6 +43,9 @@ export function LeadForm({ cardId }: LeadFormProps) {
         } else {
           try {
             const registration = await navigator.serviceWorker.register('/sw.js');
+            // Forzar la actualización del Service Worker
+            await registration.update();
+            
             const permission = await Notification.requestPermission();
             
             if (permission === 'granted') {

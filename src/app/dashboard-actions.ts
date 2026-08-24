@@ -32,12 +32,16 @@ export async function sendPushNotificationAction(cardId: string, title: string, 
       keys: { p256dh: sub.p256dh, auth: sub.auth }
     };
     try {
-      await webPush.sendNotification(pushSubscription, JSON.stringify({ 
+      const payload: any = {
         title, 
         body, 
-        url: finalUrl,
-        icon: card.logo_url || '/icon.png'
-      }));
+        url: finalUrl
+      };
+      if (card.logo_url) {
+        payload.icon = card.logo_url;
+      }
+
+      await webPush.sendNotification(pushSubscription, JSON.stringify(payload));
       successCount++;
     } catch (err: any) {
       if (err.statusCode === 410 || err.statusCode === 404) {
