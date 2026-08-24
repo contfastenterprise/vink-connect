@@ -3,6 +3,52 @@
 import { createClient } from '@/utils/supabase/server';
 import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
+import webPush from 'web-push';
+
+export async function sendPushNotificationAction(cardId: string, title: string, body: string, url: string) {
+  const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) throw new Error('Unauthorized');
+
+  // Validar que la tarjeta pertenece al usuario
+  const { data: card } = await supabase.from('cards').select('id, slug').eq('id', cardId).eq('user_id', user.id).single();
+  if (!card) return { error: 'Acceso denegado' };
+
+  const { data: subs } = await supabase.from('push_subscriptions').select('*').eq('card_id', cardId);
+  if (!subs || subs.length === 0) return { error: 'No hay usuarios suscritos a esta tarjeta aún.' };
+
+  const finalUrl = url || `https://vink.com/c/${card.slug}`;
+
+  webPush.setVapidDetails(
+    'mailto:admin@vink.com', 
+    process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY!,
+    process.env.VAPID_PRIVATE_KEY!
+  );
+
+  let successCount = 0;
+  for (const sub of subs) {
+    const pushSubscription = {
+      endpoint: sub.endpoint,
+      keys: { p256dh: sub.p256dh, auth: sub.auth }
+    };
+    try {
+      await webPush.sendNotification(pushSubscription, JSON.stringify({ 
+        title, 
+        body, 
+        url: finalUrl 
+      }));
+      successCount++;
+    } catch (err: any) {
+      if (err.statusCode === 410 || err.statusCode === 404) {
+        // Suscripción inválida/expirada, eliminarla
+        await supabase.from('push_subscriptions').delete().eq('id', sub.id);
+      }
+      console.error('Push send error:', err);
+    }
+  }
+
+  return { success: true, count: successCount };
+}
 
 export async function saveCardAction(formData: FormData) {
   const supabase = await createClient();

@@ -261,7 +261,7 @@ export default async function DashboardPage({
                     Ver Tarjeta
                   </span>
                 </a>
-                <NotificationButton />
+                <NotificationButton cardId={activeCardId} />
               </div>
             </section>
 
