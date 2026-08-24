@@ -261,7 +261,10 @@ export default async function DashboardPage({
                     Ver Tarjeta
                   </span>
                 </a>
-                <NotificationButton cardId={activeCardId} />
+                <NotificationButton 
+                  initialCardId={activeCardId} 
+                  cards={cards.map(c => ({ id: c.id, name: c.name }))} 
+                />
               </div>
             </section>
 

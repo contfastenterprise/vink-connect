@@ -6,17 +6,26 @@ import { toast } from 'sonner';
 import { sendPushNotificationAction } from '@/app/dashboard-actions';
 
 interface Props {
-  cardId?: string;
+  initialCardId?: string;
+  cards: { id: string; name: string }[];
 }
 
-export function NotificationButton({ cardId }: Props) {
+export function NotificationButton({ initialCardId, cards }: Props) {
   const [mounted, setMounted] = useState(false);
   const [isPending, startTransition] = useTransition();
   const [isSuccess, setIsSuccess] = useState(false);
   const dialogRef = useRef<HTMLDialogElement>(null);
   
+  const [selectedCardId, setSelectedCardId] = useState(initialCardId || (cards.length > 0 ? cards[0].id : ''));
   const [title, setTitle] = useState('');
   const [body, setBody] = useState('');
+
+  // Update selected card if the active card changes externally
+  useEffect(() => {
+    if (initialCardId) {
+      setSelectedCardId(initialCardId);
+    }
+  }, [initialCardId]);
 
   useEffect(() => {
     setMounted(true);
@@ -52,13 +61,13 @@ export function NotificationButton({ cardId }: Props) {
   const handleSend = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setErrorMsg('');
-    if (!cardId) {
+    if (!selectedCardId) {
       setErrorMsg('Selecciona una tarjeta primero');
       return;
     }
 
     startTransition(async () => {
-      const result = await sendPushNotificationAction(cardId, title, body, '');
+      const result = await sendPushNotificationAction(selectedCardId, title, body, '');
       if (result.error) {
         setErrorMsg(result.error);
         toast.error(result.error);
@@ -143,6 +152,31 @@ export function NotificationButton({ cardId }: Props) {
 
           {/* Formulario */}
           <form onSubmit={handleSend} className="px-6 pb-8 sm:px-8 flex flex-col gap-5">
+            
+            {/* Campo: Seleccionar Tarjeta */}
+            <div className="space-y-1.5 relative group text-left">
+              <label htmlFor="card_select" className="font-label-sm text-xs font-semibold text-on-surface-variant uppercase tracking-wider">
+                Enviar desde la tarjeta
+              </label>
+              <div className="relative">
+                <select
+                  id="card_select"
+                  value={selectedCardId}
+                  onChange={(e) => setSelectedCardId(e.target.value)}
+                  className="w-full px-4 py-3.5 rounded-xl bg-surface-container/50 border border-outline/30 focus:border-primary focus:ring-2 focus:ring-primary/20 focus:bg-surface-container-low focus:outline-none transition-all duration-200 text-on-surface font-body-md appearance-none"
+                >
+                  {cards.map(c => (
+                    <option key={c.id} value={c.id} className="bg-surface-container text-on-surface">
+                      {c.name || 'Sin Nombre'}
+                    </option>
+                  ))}
+                </select>
+                <span className="material-symbols-outlined absolute right-4 top-1/2 -translate-y-1/2 text-on-surface-variant pointer-events-none">
+                  expand_more
+                </span>
+              </div>
+            </div>
+
             {/* Campo: Título */}
             <div className="space-y-1.5 relative group text-left">
               <div className="flex justify-between items-end">
