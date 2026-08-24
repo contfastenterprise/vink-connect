@@ -1,5 +1,6 @@
 'use client';
 
+import { useState, useEffect } from 'react';
 import QRCode from 'react-qr-code';
 
 interface QRViewProps {
@@ -7,6 +8,13 @@ interface QRViewProps {
 }
 
 export function QRView({ slug }: QRViewProps) {
+  const [origin, setOrigin] = useState('https://vink.com');
+  const [copied, setCopied] = useState(false);
+
+  useEffect(() => {
+    setOrigin(window.location.origin);
+  }, []);
+
   if (!slug) {
     return (
       <div className="max-w-md mx-auto mt-12 text-center space-y-4">
@@ -14,13 +22,12 @@ export function QRView({ slug }: QRViewProps) {
           <span className="material-symbols-outlined text-4xl text-on-surface-variant">qr_code_scanner</span>
         </div>
         <h2 className="font-headline-md text-xl text-on-surface">No tienes una tarjeta</h2>
-        <p className="font-body-md text-on-surface-variant">Crea tu tarjeta en la pestaña "My Card" para poder generar tu código QR.</p>
+        <p className="font-body-md text-sm text-on-surface-variant">Crea tu tarjeta en la pestaña "Editor" para poder generar tu código QR.</p>
       </div>
     );
   }
 
-  // Obtenemos la URL actual para el QR, asumiendo que el componente se monta en el cliente
-  const cardUrl = typeof window !== 'undefined' ? `${window.location.origin}/c/${slug}` : `https://vink.com/c/${slug}`;
+  const cardUrl = `${origin}/c/${slug}`;
 
   const downloadQR = () => {
     const svg = document.getElementById("QRCode");
@@ -48,45 +55,66 @@ export function QRView({ slug }: QRViewProps) {
     img.src = "data:image/svg+xml;base64," + btoa(svgData);
   };
 
+  const handleCopy = () => {
+    navigator.clipboard.writeText(cardUrl);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
+
   return (
-    <div className="max-w-md mx-auto space-y-6">
-      <div className="text-center space-y-2">
+    <div className="max-w-[340px] mx-auto flex flex-col items-center">
+      <div className="text-center space-y-1 mb-6">
         <h2 className="font-headline-md text-xl text-on-surface">Tu Código QR</h2>
-        <p className="font-body-sm text-on-surface-variant">Muestra este código para compartir tu tarjeta rápidamente.</p>
+        <p className="font-body-sm text-[13px] text-on-surface-variant">Escanea para compartir tu tarjeta</p>
       </div>
 
-      <div className="glass-panel p-8 rounded-3xl flex flex-col items-center justify-center gap-8 relative overflow-hidden">
-        {/* Glow effect */}
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-48 h-48 bg-primary/20 rounded-full blur-[64px] pointer-events-none"></div>
+      {/* Ticket / Card Container */}
+      <div className="w-full bg-surface-container-low border border-white/10 rounded-[32px] overflow-hidden shadow-[0_20px_40px_rgba(0,0,0,0.4)] relative">
+        {/* Glow behind QR */}
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full bg-primary/10 rounded-full blur-[80px] pointer-events-none"></div>
         
-        <div className="bg-white p-4 rounded-2xl shadow-[0_0_40px_rgba(109,59,215,0.3)] relative z-10 transition duration-150 ease-out hover:scale-[1.02]">
-          <QRCode 
-            id="QRCode"
-            value={cardUrl}
-            size={200}
-            level="H" // Alta corrección de errores para poder ponerle un logo en medio futuro
-            bgColor="#ffffff"
-            fgColor="#011230" // Midnight color
-          />
+        <div className="p-8 flex flex-col items-center">
+          <div className="bg-white p-5 rounded-3xl shadow-[0_0_20px_rgba(0,0,0,0.5)] relative z-10 transition duration-150 ease-out hover:scale-[1.02]">
+            <QRCode 
+              id="QRCode"
+              value={cardUrl}
+              size={220}
+              level="H"
+              bgColor="#ffffff"
+              fgColor="#011230"
+              style={{ width: "100%", height: "auto" }}
+            />
+          </div>
         </div>
 
-        <button 
-          onClick={downloadQR}
-          className="w-full py-4 rounded-xl bg-surface-container-high border border-white/10 text-on-surface font-label-md transition duration-150 ease-out active:scale-[0.97] hover:bg-surface-container-highest flex justify-center items-center gap-2 relative z-10"
-        >
-          <span className="material-symbols-outlined text-[20px]">download</span>
-          Descargar QR (PNG)
-        </button>
+        {/* Dashed divider */}
+        <div className="w-full h-0 border-t-2 border-dashed border-white/10 relative">
+          <div className="absolute -left-3 -top-[12px] w-6 h-6 bg-background rounded-full border border-white/10"></div>
+          <div className="absolute -right-3 -top-[12px] w-6 h-6 bg-background rounded-full border border-white/10"></div>
+        </div>
 
-        <div className="w-full flex items-center justify-between bg-surface-container-lowest border border-white/5 rounded-lg p-3 relative z-10">
-          <span className="font-mono text-xs text-on-surface-variant truncate mr-2">{cardUrl}</span>
-          <button 
-            onClick={() => navigator.clipboard.writeText(cardUrl)}
-            className="w-8 h-8 rounded-md bg-surface-container-high flex items-center justify-center hover:bg-surface-container-highest transition duration-150 ease-out active:scale-[0.97]"
-            title="Copiar link"
-          >
-            <span className="material-symbols-outlined text-[16px] text-primary">content_copy</span>
-          </button>
+        <div className="p-6 bg-surface-container/50">
+          <div className="flex flex-col gap-3">
+            <button 
+              onClick={handleCopy}
+              className="w-full flex items-center justify-between bg-surface-container-high border border-white/5 rounded-xl p-3 relative z-10 hover:bg-surface-container-highest transition duration-150 ease-out active:scale-[0.97]"
+            >
+              <span className="font-mono text-xs text-on-surface-variant truncate mr-2">{cardUrl}</span>
+              <div className={`w-8 h-8 rounded-lg flex items-center justify-center transition-colors duration-150 ease-out ${copied ? 'bg-primary/20 text-primary' : 'bg-surface-container-highest text-secondary'}`}>
+                <span className="material-symbols-outlined text-[16px]">
+                  {copied ? 'check' : 'content_copy'}
+                </span>
+              </div>
+            </button>
+
+            <button 
+              onClick={downloadQR}
+              className="w-full py-3.5 rounded-xl bg-inverse-primary text-white font-label-md transition duration-150 ease-out active:scale-[0.97] hover:bg-inverse-primary/90 flex justify-center items-center gap-2 shadow-[0_0_15px_rgba(109,59,215,0.2)]"
+            >
+              <span className="material-symbols-outlined text-[18px]">download</span>
+              Guardar Imagen
+            </button>
+          </div>
         </div>
       </div>
     </div>

@@ -2,23 +2,12 @@ import { NextRequest, NextResponse } from 'next/server';
 import { generateVCard } from '@/lib/vcard';
 import { Card } from '@/types';
 
-// Mock DB call for MVP since Supabase isn't fully set up yet
+import { createClient } from '@/utils/supabase/server';
+
 async function getCardBySlug(slug: string): Promise<Card | null> {
-  // In a real app, you would query Supabase: 
-  // const { data } = await supabase.from('cards').select('*').eq('slug', slug).single()
-  return {
-    id: slug,
-    user_id: 'user-123',
-    slug,
-    name: 'Alex Rivera',
-    title: 'Senior Product Designer',
-    company: 'Nexus Connect',
-    phone: '+1234567890',
-    email: 'alex@nexusconnect.com',
-    website: 'https://alexrivera.design',
-    created_at: new Date().toISOString(),
-    updated_at: new Date().toISOString(),
-  };
+  const supabase = await createClient();
+  const { data } = await supabase.from('cards').select('*').eq('slug', slug).single();
+  return data as Card | null;
 }
 
 export async function GET(

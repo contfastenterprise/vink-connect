@@ -121,3 +121,106 @@
   --radius-lg: 0.75rem;
   --radius-xl: 0.75rem;
 }
+
+.glass-panel {
+    background-color: rgba(22, 28, 45, 0.8);
+    backdrop-filter: blur(16px);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-top: 1px solid rgba(255, 255, 255, 0.15);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+}
+.btn-primary-glow {
+    background-color: var(--color-inverse-primary);
+    transition: all 0.2s ease-in-out;
+}
+.btn-primary-glow:hover {
+    box-shadow: 0 0 16px var(--color-inverse-primary);
+}
+.ambient-glow {
+    position: fixed;
+    top: 20%;
+    left: 50%;
+    width: 80vw;
+    height: 80vw;
+    transform: translate(-50%, -50%);
+    background: radial-gradient(circle, rgba(139, 92, 246, 0.05) 0%, rgba(14, 19, 34, 0) 70%);
+    z-index: -1;
+    pointer-events: none;
+}
+
+/* LIGHT THEME OVERRIDES (Professional & Sleek) */
+.light {
+  /* Background & Surfaces (Clean, soft whites and light grays) */
+  --color-background: #F8FAFC;
+  --color-surface: #FFFFFF;
+  --color-surface-dim: #F1F5F9;
+  --color-surface-bright: #FFFFFF;
+  --color-surface-container-lowest: #FFFFFF;
+  --color-surface-container-low: #F8FAFC;
+  --color-surface-container: #F1F5F9;
+  --color-surface-container-high: #E2E8F0;
+  --color-surface-container-highest: #CBD5E1;
+  --color-surface-variant: #E2E8F0;
+  
+  /* Inverse colors */
+  --color-inverse-surface: #0F172A;
+  --color-inverse-on-surface: #F8FAFC;
+  --color-inverse-primary: #818CF8;
+
+  /* Typography (High readability slate/charcoal) */
+  --color-on-background: #0F172A;
+  --color-on-surface: #0F172A;
+  --color-on-surface-variant: #475569;
+  
+  /* Outline / Borders */
+  --color-outline: #94A3B8;
+  --color-outline-variant: #CBD5E1;
+
+  /* Primary (Vibrant Indigo/Purple) */
+  --color-primary: #4F46E5;
+  --color-on-primary: #FFFFFF;
+  --color-primary-container: #E0E7FF;
+  --color-on-primary-container: #312E81;
+  --color-primary-fixed: #E0E7FF;
+  --color-primary-fixed-dim: #C7D2FE;
+  --color-on-primary-fixed: #312E81;
+  --color-on-primary-fixed-variant: #4338CA;
+  --color-surface-tint: #4F46E5;
+
+  /* Secondary (Teal/Cyan for accents) */
+  --color-secondary: #0284C7;
+  --color-on-secondary: #FFFFFF;
+  --color-secondary-container: #E0F2FE;
+  --color-on-secondary-container: #0C4A6E;
+  --color-secondary-fixed: #E0F2FE;
+  --color-secondary-fixed-dim: #BAE6FD;
+  --color-on-secondary-fixed: #0C4A6E;
+  --color-on-secondary-fixed-variant: #0369A1;
+
+  /* Tertiary */
+  --color-tertiary: #0D9488;
+  --color-on-tertiary: #FFFFFF;
+  --color-tertiary-container: #CCFBF1;
+  --color-on-tertiary-container: #115E59;
+  --color-tertiary-fixed: #CCFBF1;
+  --color-tertiary-fixed-dim: #99F6E4;
+  --color-on-tertiary-fixed: #115E59;
+  --color-on-tertiary-fixed-variant: #0F766E;
+
+  /* Error */
+  --color-error: #DC2626;
+  --color-on-error: #FFFFFF;
+  --color-error-container: #FEE2E2;
+  --color-on-error-container: #7F1D1D;
+}
+
+.light .glass-panel {
+    background-color: rgba(255, 255, 255, 0.7);
+    backdrop-filter: blur(16px);
+    border: 1px solid rgba(0, 0, 0, 0.06);
+    border-top: 1px solid rgba(255, 255, 255, 0.8);
+    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.04);
+}
+.light .ambient-glow {
+    background: radial-gradient(circle, rgba(79, 70, 229, 0.08) 0%, rgba(248, 250, 252, 0) 70%);
+}

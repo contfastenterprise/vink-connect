@@ -11,7 +11,13 @@ export function generateVCard(card: Card): string {
     card.phone ? `TEL;TYPE=CELL:${card.phone}` : '',
     card.email ? `EMAIL;TYPE=WORK,INTERNET:${card.email}` : '',
     card.website ? `URL:${card.website}` : '',
-    `URL:https://midominio.com/c/${card.slug}`,
+    card.social_links?.linkedin ? `URL;type=LinkedIn:${card.social_links.linkedin}` : '',
+    card.social_links?.twitter ? `URL;type=Twitter:${card.social_links.twitter}` : '',
+    card.social_links?.instagram ? `URL;type=Instagram:${card.social_links.instagram}` : '',
+    card.social_links?.github ? `URL;type=GitHub:${card.social_links.github}` : '',
+    card.theme_config?.bio ? `NOTE:${card.theme_config.bio.replace(/\n/g, '\\n')}` : '',
+    // This is a generic fallback link to their profile
+    // `URL;type=Profile:https://vink.com/c/${card.slug}`,
     `REV:${new Date().toISOString()}`,
     'END:VCARD'
   ].filter(Boolean).join('\n');
