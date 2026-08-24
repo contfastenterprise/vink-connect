@@ -37,23 +37,30 @@ export function LeadForm({ cardId }: LeadFormProps) {
       setStatus('idle');
       
       // Intentar suscribir a notificaciones push si el usuario lo marcó
-      if (wantsPush && 'serviceWorker' in navigator && 'PushManager' in window) {
-        try {
-          const registration = await navigator.serviceWorker.register('/sw.js');
-          const permission = await Notification.requestPermission();
-          
-          if (permission === 'granted') {
-            const vapidPublicKey = process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY;
-            if (vapidPublicKey) {
-              const subscription = await registration.pushManager.subscribe({
-                userVisibleOnly: true,
-                applicationServerKey: urlBase64ToUint8Array(vapidPublicKey)
-              });
-              formData.append('push_subscription', JSON.stringify(subscription));
+      if (wantsPush) {
+        if (!('serviceWorker' in navigator) || !('PushManager' in window)) {
+          alert('Tu navegador o dispositivo no soporta notificaciones Push directamente.');
+        } else {
+          try {
+            const registration = await navigator.serviceWorker.register('/sw.js');
+            const permission = await Notification.requestPermission();
+            
+            if (permission === 'granted') {
+              const vapidPublicKey = process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY;
+              if (vapidPublicKey) {
+                const subscription = await registration.pushManager.subscribe({
+                  userVisibleOnly: true,
+                  applicationServerKey: urlBase64ToUint8Array(vapidPublicKey)
+                });
+                formData.append('push_subscription', JSON.stringify(subscription));
+              }
+            } else {
+              alert('No aceptaste las notificaciones, por lo que no recibirás promociones.');
             }
+          } catch (err) {
+            console.error('Error suscribiendo a push:', err);
+            alert('Error intentando habilitar las notificaciones Push.');
           }
-        } catch (err) {
-          console.error('Push subscription failed:', err);
         }
       }
 
