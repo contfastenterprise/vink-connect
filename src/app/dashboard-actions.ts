@@ -11,7 +11,7 @@ export async function sendPushNotificationAction(cardId: string, title: string, 
   if (!user) throw new Error('Unauthorized');
 
   // Validar que la tarjeta pertenece al usuario
-  const { data: card } = await supabase.from('cards').select('id, slug').eq('id', cardId).eq('user_id', user.id).single();
+  const { data: card } = await supabase.from('cards').select('id, slug, logo_url').eq('id', cardId).eq('user_id', user.id).single();
   if (!card) return { error: 'Acceso denegado' };
 
   const { data: subs } = await supabase.from('push_subscriptions').select('*').eq('card_id', cardId);

@@ -12,6 +12,7 @@ interface Props {
 export function NotificationButton({ cardId }: Props) {
   const [mounted, setMounted] = useState(false);
   const [isPending, startTransition] = useTransition();
+  const [isSuccess, setIsSuccess] = useState(false);
   const dialogRef = useRef<HTMLDialogElement>(null);
   
   const [title, setTitle] = useState('');
@@ -25,6 +26,7 @@ export function NotificationButton({ cardId }: Props) {
     if (dialogRef.current) {
       dialogRef.current.showModal();
       document.body.style.overflow = 'hidden'; // Evitar scroll de fondo
+      setIsSuccess(false);
     }
   };
 
@@ -32,6 +34,7 @@ export function NotificationButton({ cardId }: Props) {
     if (dialogRef.current) {
       dialogRef.current.close();
       document.body.style.overflow = '';
+      setIsSuccess(false);
     }
   };
 
@@ -54,10 +57,13 @@ export function NotificationButton({ cardId }: Props) {
       if (result.error) {
         toast.error(result.error);
       } else {
-        toast.success(`Mensaje enviado exitosamente a ${result.count} suscriptores.`);
-        closeModal();
-        setTitle('');
-        setBody('');
+        setIsSuccess(true);
+        setTimeout(() => {
+          closeModal();
+          setTitle('');
+          setBody('');
+          setIsSuccess(false);
+        }, 2500);
       }
     });
   };
@@ -88,6 +94,18 @@ export function NotificationButton({ cardId }: Props) {
           onCancel={closeModal}
         >
           <div className="relative w-full h-full glass-panel flex flex-col" style={{ minHeight: '400px' }}>
+            {isSuccess ? (
+              <div className="flex flex-col items-center justify-center h-full min-h-[400px] p-8 animate-in zoom-in-95 duration-300">
+                <div className="w-24 h-24 rounded-full bg-green-500/20 flex items-center justify-center mb-6 border border-green-500/30">
+                  <span className="material-symbols-outlined text-green-400 text-5xl">check_circle</span>
+                </div>
+                <h3 className="text-2xl font-bold text-on-surface mb-2">¡Promoción Lanzada!</h3>
+                <p className="text-center text-on-surface-variant font-body-md">
+                  Tus clientes han recibido la notificación.
+                </p>
+              </div>
+            ) : (
+              <>
             {/* Cabecera con degradado y brillo */}
             <div className="relative px-6 py-8 sm:px-8 sm:py-10 text-center overflow-hidden flex-shrink-0">
               <div className="absolute inset-0 bg-gradient-to-b from-primary/10 to-transparent"></div>
@@ -184,6 +202,8 @@ export function NotificationButton({ cardId }: Props) {
               )}
             </button>
           </form>
+              </>
+            )}
         </div>
       </dialog>, document.body)}
     </>
