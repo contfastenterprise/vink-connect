@@ -38,15 +38,19 @@ export async function saveLeadAction(formData: FormData) {
   if (push_subscription) {
     try {
       const parsedSub = JSON.parse(push_subscription);
-      await supabase.from('push_subscriptions').insert([{
+      const { error: pushError } = await supabase.from('push_subscriptions').insert([{
         card_id,
         lead_id: null, // Opcional: si quieres vincularlo al lead
         endpoint: parsedSub.endpoint,
         p256dh: parsedSub.keys.p256dh,
         auth: parsedSub.keys.auth
       }]);
+      
+      if (pushError) {
+        console.error('Supabase Push Insert Error:', pushError);
+      }
     } catch (err) {
-      console.error('Error parsing or saving push subscription:', err);
+      console.error('Error parsing push subscription JSON:', err);
     }
   }
 
