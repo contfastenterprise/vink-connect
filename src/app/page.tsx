@@ -10,6 +10,8 @@ import { CardListGrid } from '@/components/dashboard/card-list-grid';
 import { ThemeToggle } from '@/components/theme-toggle';
 import { Card } from '@/types';
 
+export const dynamic = 'force-dynamic';
+
 export default async function DashboardPage({
   searchParams,
 }: {

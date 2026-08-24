@@ -33,6 +33,7 @@ export async function saveLeadAction(formData: FormData) {
     return { error: 'Ocurrió un error al guardar tus datos. Intenta nuevamente.' };
   }
 
+  revalidatePath('/');
   return { success: true };
 }
 
@@ -47,5 +48,6 @@ export async function trackViewAction(cardId: string) {
     return { error: 'Ocurrió un error al registrar la visita.' };
   }
 
+  revalidatePath('/');
   return { success: true };
 }
