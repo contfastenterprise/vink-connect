@@ -53,23 +53,16 @@ export function LeadForm({ cardId }: LeadFormProps) {
                   applicationServerKey: urlBase64ToUint8Array(vapidPublicKey)
                 });
                 formData.append('push_subscription', JSON.stringify(subscription));
-                // DEBUG
-                alert('DEBUG: Suscripción generada correctamente. Longitud: ' + JSON.stringify(subscription).length);
               } else {
-                alert('DEBUG ERROR: Faltan las llaves VAPID en el entorno cliente (NEXT_PUBLIC_VAPID_PUBLIC_KEY).');
+                console.error('Faltan las llaves VAPID en el cliente.');
               }
             } else {
-              alert('No aceptaste las notificaciones, por lo que no recibirás promociones.');
+              console.warn('Permiso push denegado por el usuario.');
             }
           } catch (err: any) {
             console.error('Error suscribiendo a push:', err);
-            alert('Error intentando habilitar las notificaciones Push: ' + err.message);
           }
         }
-      }
-
-      if (wantsPush && !formData.get('push_subscription')) {
-        alert('DEBUG ERROR: Falló la obtención de la suscripción y no se adjuntó al formulario.');
       }
 
       const result = await saveLeadAction(formData);
@@ -78,9 +71,6 @@ export function LeadForm({ cardId }: LeadFormProps) {
         setStatus('error');
         setErrorMessage(result.error);
       } else {
-        if (result.pushError) {
-          alert('El contacto se guardó, pero hubo un error en la base de datos de notificaciones: ' + result.pushError);
-        }
         setStatus('success');
       }
     });
