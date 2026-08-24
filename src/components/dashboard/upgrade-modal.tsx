@@ -1,6 +1,7 @@
 'use client';
 
-import { useState, useTransition } from 'react';
+import { useState, useTransition, useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import { toast } from 'sonner';
 import { upgradeToProAction } from '@/app/dashboard-actions';
 
@@ -12,8 +13,13 @@ interface UpgradeModalProps {
 
 export function UpgradeModal({ isOpen, onClose, onSuccess }: UpgradeModalProps) {
   const [isPending, startTransition] = useTransition();
+  const [mounted, setMounted] = useState(false);
 
-  if (!isOpen) return null;
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  if (!isOpen || !mounted) return null;
 
   const handleUpgrade = () => {
     startTransition(async () => {
@@ -32,11 +38,11 @@ export function UpgradeModal({ isOpen, onClose, onSuccess }: UpgradeModalProps) 
     });
   };
 
-  return (
+  const modalContent = (
     <div 
       style={{
         position: 'fixed', top: 0, left: 0, right: 0, bottom: 0,
-        zIndex: 9999,
+        zIndex: 99999,
         display: 'flex', alignItems: 'center', justifyContent: 'center',
         padding: '16px',
         backgroundColor: 'rgba(0, 0, 0, 0.85)',
@@ -184,4 +190,6 @@ export function UpgradeModal({ isOpen, onClose, onSuccess }: UpgradeModalProps) 
       </div>
     </div>
   );
+
+  return createPortal(modalContent, document.body);
 }
