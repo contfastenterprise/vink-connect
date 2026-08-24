@@ -1,7 +1,6 @@
 'use client';
 
-import { useState, useTransition, useEffect } from 'react';
-import { createPortal } from 'react-dom';
+import { useState, useTransition, useRef, useEffect } from 'react';
 import { toast } from 'sonner';
 import { sendPushNotificationAction } from '@/app/dashboard-actions';
 
@@ -10,16 +9,31 @@ interface Props {
 }
 
 export function NotificationButton({ cardId }: Props) {
-  const [isOpen, setIsOpen] = useState(false);
   const [isPending, startTransition] = useTransition();
-  const [mounted, setMounted] = useState(false);
+  const dialogRef = useRef<HTMLDialogElement>(null);
   
-  // States for character counters
   const [title, setTitle] = useState('');
   const [body, setBody] = useState('');
 
+  const openModal = () => {
+    if (dialogRef.current) {
+      dialogRef.current.showModal();
+      document.body.style.overflow = 'hidden'; // Evitar scroll de fondo
+    }
+  };
+
+  const closeModal = () => {
+    if (dialogRef.current) {
+      dialogRef.current.close();
+      document.body.style.overflow = '';
+    }
+  };
+
+  // Limpiar overflow si se desmonta
   useEffect(() => {
-    setMounted(true);
+    return () => {
+      document.body.style.overflow = '';
+    };
   }, []);
 
   const handleSend = (e: React.FormEvent<HTMLFormElement>) => {
@@ -35,7 +49,7 @@ export function NotificationButton({ cardId }: Props) {
         toast.error(result.error);
       } else {
         toast.success(`Mensaje enviado exitosamente a ${result.count} suscriptores.`);
-        setIsOpen(false);
+        closeModal();
         setTitle('');
         setBody('');
       }
@@ -45,7 +59,8 @@ export function NotificationButton({ cardId }: Props) {
   return (
     <>
       <button 
-        onClick={() => setIsOpen(true)}
+        type="button"
+        onClick={openModal}
         className="glass-panel rounded-xl p-4 flex flex-col items-center justify-center gap-2 hover:bg-surface-container-highest/50 transition-all duration-300 ease-out active:scale-[0.97] group relative"
       >
         <div className="absolute top-2 right-2 md:top-3 md:right-3 w-2.5 h-2.5 bg-error rounded-full border-2 border-surface shadow-[0_0_8px_rgba(255,180,171,0.6)] animate-pulse"></div>
@@ -59,118 +74,110 @@ export function NotificationButton({ cardId }: Props) {
         </span>
       </button>
 
-      {isOpen && mounted && createPortal(
-        <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 sm:p-6">
-          {/* Backdrop con desenfoque suave */}
-          <div 
-            className="absolute inset-0 bg-background/60 backdrop-blur-md animate-in fade-in duration-300"
-            onClick={() => setIsOpen(false)}
-          />
-          
-          {/* Contenedor principal del modal */}
-          <div className="relative w-full max-w-lg glass-panel rounded-3xl shadow-2xl overflow-hidden animate-in zoom-in-95 fade-in slide-in-from-bottom-4 duration-300 flex flex-col">
+      <dialog 
+        ref={dialogRef}
+        className="backdrop:bg-background/80 backdrop:backdrop-blur-md bg-transparent p-0 w-[95vw] max-w-lg m-auto rounded-3xl shadow-2xl overflow-hidden open:animate-in open:zoom-in-95 open:fade-in duration-300 border-0"
+        onCancel={closeModal}
+      >
+        <div className="relative w-full h-full glass-panel flex flex-col">
+          {/* Cabecera con degradado y brillo */}
+          <div className="relative px-6 py-8 sm:px-8 sm:py-10 text-center overflow-hidden flex-shrink-0">
+            <div className="absolute inset-0 bg-gradient-to-b from-primary/10 to-transparent"></div>
             
-            {/* Cabecera con degradado y brillo */}
-            <div className="relative px-6 py-8 sm:px-8 sm:py-10 text-center overflow-hidden flex-shrink-0">
-              <div className="absolute inset-0 bg-gradient-to-b from-primary/10 to-transparent"></div>
-              
-              <button 
-                onClick={() => setIsOpen(false)}
-                className="absolute top-4 right-4 w-8 h-8 flex items-center justify-center rounded-full bg-surface/50 hover:bg-surface text-on-surface-variant hover:text-on-surface transition-all duration-200 z-10"
-              >
-                <span className="material-symbols-outlined text-[18px]">close</span>
-              </button>
+            <button 
+              type="button"
+              onClick={closeModal}
+              className="absolute top-4 right-4 w-8 h-8 flex items-center justify-center rounded-full bg-surface/50 hover:bg-surface text-on-surface-variant hover:text-on-surface transition-all duration-200 z-10"
+            >
+              <span className="material-symbols-outlined text-[18px]">close</span>
+            </button>
 
-              <div className="relative z-10 flex flex-col items-center gap-3">
-                <div className="w-14 h-14 rounded-2xl bg-primary/20 flex items-center justify-center border border-primary/30 shadow-[0_0_20px_rgba(var(--color-primary),0.3)]">
-                  <span className="material-symbols-outlined text-primary text-3xl">
-                    send_to_mobile
-                  </span>
-                </div>
-                <div>
-                  <h3 className="font-headline-md text-2xl text-on-surface font-bold tracking-tight mb-1">
-                    Nueva Promoción
-                  </h3>
-                  <p className="font-body-md text-sm text-on-surface-variant max-w-[280px] mx-auto leading-relaxed">
-                    Envía una notificación directa al celular de tus contactos suscritos.
-                  </p>
-                </div>
+            <div className="relative z-10 flex flex-col items-center gap-3">
+              <div className="w-14 h-14 rounded-2xl bg-primary/20 flex items-center justify-center border border-primary/30 shadow-[0_0_20px_rgba(var(--color-primary),0.3)]">
+                <span className="material-symbols-outlined text-primary text-3xl">
+                  send_to_mobile
+                </span>
+              </div>
+              <div>
+                <h3 className="font-headline-md text-2xl text-on-surface font-bold tracking-tight mb-1">
+                  Nueva Promoción
+                </h3>
+                <p className="font-body-md text-sm text-on-surface-variant max-w-[280px] mx-auto leading-relaxed">
+                  Envía una notificación directa al celular de tus contactos suscritos.
+                </p>
               </div>
             </div>
-
-            {/* Formulario */}
-            <form onSubmit={handleSend} className="px-6 pb-8 sm:px-8 flex flex-col gap-5">
-              
-              {/* Campo: Título */}
-              <div className="space-y-1.5 relative group">
-                <div className="flex justify-between items-end">
-                  <label htmlFor="title" className="font-label-sm text-xs font-semibold text-on-surface-variant uppercase tracking-wider">
-                    Título de la notificación
-                  </label>
-                  <span className={`text-[10px] font-label-md ${title.length >= 50 ? 'text-error' : 'text-on-surface-variant/50'}`}>
-                    {title.length}/50
-                  </span>
-                </div>
-                <input 
-                  required
-                  type="text" 
-                  id="title" 
-                  name="title" 
-                  maxLength={50}
-                  value={title}
-                  onChange={(e) => setTitle(e.target.value)}
-                  className="w-full px-4 py-3.5 rounded-xl bg-surface-container/50 border border-outline/30 focus:border-primary focus:ring-2 focus:ring-primary/20 focus:bg-surface-container-low focus:outline-none transition-all duration-200 text-on-surface font-body-md placeholder:text-on-surface-variant/40"
-                  placeholder="Ej: ¡20% de Descuento hoy!"
-                />
-              </div>
-
-              {/* Campo: Mensaje */}
-              <div className="space-y-1.5 relative group">
-                <div className="flex justify-between items-end">
-                  <label htmlFor="body" className="font-label-sm text-xs font-semibold text-on-surface-variant uppercase tracking-wider">
-                    Cuerpo del mensaje
-                  </label>
-                  <span className={`text-[10px] font-label-md ${body.length >= 120 ? 'text-error' : 'text-on-surface-variant/50'}`}>
-                    {body.length}/120
-                  </span>
-                </div>
-                <textarea 
-                  required
-                  id="body" 
-                  name="body"
-                  rows={3} 
-                  maxLength={120}
-                  value={body}
-                  onChange={(e) => setBody(e.target.value)}
-                  className="w-full px-4 py-3.5 rounded-xl bg-surface-container/50 border border-outline/30 focus:border-primary focus:ring-2 focus:ring-primary/20 focus:bg-surface-container-low focus:outline-none transition-all duration-200 text-on-surface font-body-md resize-none placeholder:text-on-surface-variant/40"
-                  placeholder="Ej: Muestra esta notificación en caja para aplicar el descuento..."
-                />
-              </div>
-
-              {/* Botón de Enviar */}
-              <button 
-                type="submit" 
-                disabled={isPending || title.trim() === '' || body.trim() === ''}
-                className="w-full py-4 mt-2 rounded-xl btn-primary-glow text-white font-label-md text-sm transition-all duration-300 active:scale-[0.98] shadow-lg hover:shadow-primary/25 hover:-translate-y-0.5 flex justify-center items-center gap-2 disabled:opacity-50 disabled:pointer-events-none"
-              >
-                {isPending ? (
-                  <>
-                    <span className="material-symbols-outlined animate-spin text-[20px]">sync</span>
-                    Enviando notificación...
-                  </>
-                ) : (
-                  <>
-                    <span className="material-symbols-outlined text-[20px] fill">rocket_launch</span>
-                    Lanzar Promoción
-                  </>
-                )}
-              </button>
-            </form>
-
           </div>
-        </div>,
-        document.body
-      )}
+
+          {/* Formulario */}
+          <form onSubmit={handleSend} className="px-6 pb-8 sm:px-8 flex flex-col gap-5">
+            {/* Campo: Título */}
+            <div className="space-y-1.5 relative group text-left">
+              <div className="flex justify-between items-end">
+                <label htmlFor="title" className="font-label-sm text-xs font-semibold text-on-surface-variant uppercase tracking-wider">
+                  Título de la notificación
+                </label>
+                <span className={`text-[10px] font-label-md ${title.length >= 50 ? 'text-error' : 'text-on-surface-variant/50'}`}>
+                  {title.length}/50
+                </span>
+              </div>
+              <input 
+                required
+                type="text" 
+                id="title" 
+                name="title" 
+                maxLength={50}
+                value={title}
+                onChange={(e) => setTitle(e.target.value)}
+                className="w-full px-4 py-3.5 rounded-xl bg-surface-container/50 border border-outline/30 focus:border-primary focus:ring-2 focus:ring-primary/20 focus:bg-surface-container-low focus:outline-none transition-all duration-200 text-on-surface font-body-md placeholder:text-on-surface-variant/40"
+                placeholder="Ej: ¡20% de Descuento hoy!"
+              />
+            </div>
+
+            {/* Campo: Mensaje */}
+            <div className="space-y-1.5 relative group text-left">
+              <div className="flex justify-between items-end">
+                <label htmlFor="body" className="font-label-sm text-xs font-semibold text-on-surface-variant uppercase tracking-wider">
+                  Cuerpo del mensaje
+                </label>
+                <span className={`text-[10px] font-label-md ${body.length >= 120 ? 'text-error' : 'text-on-surface-variant/50'}`}>
+                  {body.length}/120
+                </span>
+              </div>
+              <textarea 
+                required
+                id="body" 
+                name="body"
+                rows={3} 
+                maxLength={120}
+                value={body}
+                onChange={(e) => setBody(e.target.value)}
+                className="w-full px-4 py-3.5 rounded-xl bg-surface-container/50 border border-outline/30 focus:border-primary focus:ring-2 focus:ring-primary/20 focus:bg-surface-container-low focus:outline-none transition-all duration-200 text-on-surface font-body-md resize-none placeholder:text-on-surface-variant/40"
+                placeholder="Ej: Muestra esta notificación en caja para aplicar el descuento..."
+              />
+            </div>
+
+            {/* Botón de Enviar */}
+            <button 
+              type="submit" 
+              disabled={isPending || title.trim() === '' || body.trim() === ''}
+              className="w-full py-4 mt-2 rounded-xl btn-primary-glow text-white font-label-md text-sm transition-all duration-300 active:scale-[0.98] shadow-lg hover:shadow-primary/25 hover:-translate-y-0.5 flex justify-center items-center gap-2 disabled:opacity-50 disabled:pointer-events-none"
+            >
+              {isPending ? (
+                <>
+                  <span className="material-symbols-outlined animate-spin text-[20px]">sync</span>
+                  Enviando notificación...
+                </>
+              ) : (
+                <>
+                  <span className="material-symbols-outlined text-[20px] fill">rocket_launch</span>
+                  Lanzar Promoción
+                </>
+              )}
+            </button>
+          </form>
+        </div>
+      </dialog>
     </>
   );
 }
