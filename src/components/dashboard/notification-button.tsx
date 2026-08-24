@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useTransition, useRef, useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import { toast } from 'sonner';
 import { sendPushNotificationAction } from '@/app/dashboard-actions';
 
@@ -74,40 +75,42 @@ export function NotificationButton({ cardId }: Props) {
         </span>
       </button>
 
-      <dialog 
-        ref={dialogRef}
-        className="backdrop:bg-background/80 backdrop:backdrop-blur-md bg-transparent p-0 w-[95vw] max-w-lg m-auto rounded-3xl shadow-2xl overflow-hidden open:animate-in open:zoom-in-95 open:fade-in duration-300 border-0"
-        onCancel={closeModal}
-      >
-        <div className="relative w-full h-full glass-panel flex flex-col">
-          {/* Cabecera con degradado y brillo */}
-          <div className="relative px-6 py-8 sm:px-8 sm:py-10 text-center overflow-hidden flex-shrink-0">
-            <div className="absolute inset-0 bg-gradient-to-b from-primary/10 to-transparent"></div>
-            
-            <button 
-              type="button"
-              onClick={closeModal}
-              className="absolute top-4 right-4 w-8 h-8 flex items-center justify-center rounded-full bg-surface/50 hover:bg-surface text-on-surface-variant hover:text-on-surface transition-all duration-200 z-10"
-            >
-              <span className="material-symbols-outlined text-[18px]">close</span>
-            </button>
+      {mounted && createPortal(
+        <dialog 
+          ref={dialogRef}
+          style={{ width: '90vw', maxWidth: '500px', minWidth: '300px' }}
+          className="backdrop:bg-background/80 backdrop:backdrop-blur-md bg-transparent p-0 m-auto rounded-3xl shadow-2xl overflow-hidden open:animate-in open:zoom-in-95 open:fade-in duration-300 border-0"
+          onCancel={closeModal}
+        >
+          <div className="relative w-full h-full glass-panel flex flex-col" style={{ minHeight: '400px' }}>
+            {/* Cabecera con degradado y brillo */}
+            <div className="relative px-6 py-8 sm:px-8 sm:py-10 text-center overflow-hidden flex-shrink-0">
+              <div className="absolute inset-0 bg-gradient-to-b from-primary/10 to-transparent"></div>
+              
+              <button 
+                type="button"
+                onClick={closeModal}
+                className="absolute top-4 right-4 w-8 h-8 flex items-center justify-center rounded-full bg-surface/50 hover:bg-surface text-on-surface-variant hover:text-on-surface transition-all duration-200 z-10"
+              >
+                <span className="material-symbols-outlined text-[18px]">close</span>
+              </button>
 
-            <div className="relative z-10 flex flex-col items-center gap-3">
-              <div className="w-14 h-14 rounded-2xl bg-primary/20 flex items-center justify-center border border-primary/30 shadow-[0_0_20px_rgba(var(--color-primary),0.3)]">
-                <span className="material-symbols-outlined text-primary text-3xl">
-                  send_to_mobile
-                </span>
-              </div>
-              <div>
-                <h3 className="font-headline-md text-2xl text-on-surface font-bold tracking-tight mb-1">
-                  Nueva Promoción
-                </h3>
-                <p className="font-body-md text-sm text-on-surface-variant max-w-[280px] mx-auto leading-relaxed">
-                  Envía una notificación directa al celular de tus contactos suscritos.
-                </p>
+              <div className="relative z-10 flex flex-col items-center gap-3">
+                <div className="w-14 h-14 rounded-2xl bg-primary/20 flex items-center justify-center border border-primary/30 shadow-[0_0_20px_rgba(var(--color-primary),0.3)]">
+                  <span className="material-symbols-outlined text-primary text-3xl">
+                    send_to_mobile
+                  </span>
+                </div>
+                <div>
+                  <h3 className="font-headline-md text-2xl text-on-surface font-bold tracking-tight mb-1">
+                    Nueva Promoción
+                  </h3>
+                  <p className="font-body-md text-sm text-on-surface-variant max-w-[280px] mx-auto leading-relaxed">
+                    Envía una notificación directa al celular de tus contactos suscritos.
+                  </p>
+                </div>
               </div>
             </div>
-          </div>
 
           {/* Formulario */}
           <form onSubmit={handleSend} className="px-6 pb-8 sm:px-8 flex flex-col gap-5">
@@ -177,7 +180,7 @@ export function NotificationButton({ cardId }: Props) {
             </button>
           </form>
         </div>
-      </dialog>
+      </dialog>, document.body)}
     </>
   );
 }
