@@ -2,6 +2,7 @@ import { Card } from '@/types';
 import { createClient } from '@/utils/supabase/server';
 import { LeadForm } from '@/components/public-card/lead-form';
 import { ViewTracker } from '@/components/public-card/view-tracker';
+import { ShareButton } from '@/components/public-card/share-button';
 
 // Fetch card from Supabase
 async function getCardBySlug(slug: string): Promise<Card | null> {
@@ -99,10 +100,7 @@ export default async function PublicCardPage({ params }: { params: Promise<{ slu
             <span className="material-symbols-outlined fill text-[18px]">person_add</span>
             Añadir a Contactos
           </a>
-          <button className="flex-1 flex items-center justify-center gap-2 bg-transparent border border-primary text-primary font-label-md text-[13px] px-6 py-3 rounded-xl hover:bg-primary/10 transition duration-150 ease-out active:scale-[0.97] glass-border">
-            <span className="material-symbols-outlined text-[18px]">share</span>
-            Compartir Tarjeta
-          </button>
+          <ShareButton title={`Tarjeta de ${card.name}`} url={`https://vink.com/c/${card.slug}`} />
         </section>
 
         {/* About Section */}
