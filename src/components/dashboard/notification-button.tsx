@@ -10,11 +10,16 @@ interface Props {
 }
 
 export function NotificationButton({ cardId }: Props) {
+  const [mounted, setMounted] = useState(false);
   const [isPending, startTransition] = useTransition();
   const dialogRef = useRef<HTMLDialogElement>(null);
   
   const [title, setTitle] = useState('');
   const [body, setBody] = useState('');
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   const openModal = () => {
     if (dialogRef.current) {
