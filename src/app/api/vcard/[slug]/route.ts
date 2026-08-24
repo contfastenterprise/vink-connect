@@ -21,7 +21,7 @@ export async function GET(
     return NextResponse.json({ error: 'Card not found' }, { status: 404 });
   }
 
-  const vcardContent = generateVCard(card);
+  const vcardContent = await generateVCard(card);
 
   return new NextResponse(vcardContent, {
     headers: {

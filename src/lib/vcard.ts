@@ -1,6 +1,29 @@
 import { Card } from '@/types';
 
-export function generateVCard(card: Card): string {
+export async function generateVCard(card: Card): Promise<string> {
+  let photoData = '';
+  
+  if (card.logo_url) {
+    try {
+      const response = await fetch(card.logo_url);
+      if (response.ok) {
+        const arrayBuffer = await response.arrayBuffer();
+        const base64 = Buffer.from(arrayBuffer).toString('base64');
+        const contentType = response.headers.get('content-type') || 'image/jpeg';
+        
+        // Determinar el tipo para vCard
+        let vcardType = 'JPEG';
+        if (contentType.includes('png')) vcardType = 'PNG';
+        if (contentType.includes('gif')) vcardType = 'GIF';
+        if (contentType.includes('webp')) vcardType = 'WEBP';
+        
+        photoData = `PHOTO;ENCODING=b;TYPE=${vcardType}:${base64}`;
+      }
+    } catch (err) {
+      console.error('Error fetching vcard photo:', err);
+    }
+  }
+
   const vcard = [
     'BEGIN:VCARD',
     'VERSION:3.0',
@@ -16,8 +39,7 @@ export function generateVCard(card: Card): string {
     card.social_links?.instagram ? `URL;type=Instagram:${card.social_links.instagram}` : '',
     card.social_links?.github ? `URL;type=GitHub:${card.social_links.github}` : '',
     card.theme_config?.bio ? `NOTE:${card.theme_config.bio.replace(/\n/g, '\\n')}` : '',
-    // This is a generic fallback link to their profile
-    // `URL;type=Profile:https://vink.com/c/${card.slug}`,
+    photoData,
     `REV:${new Date().toISOString()}`,
     'END:VCARD'
   ].filter(Boolean).join('\n');

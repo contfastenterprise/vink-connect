@@ -35,7 +35,8 @@ export async function sendPushNotificationAction(cardId: string, title: string, 
       await webPush.sendNotification(pushSubscription, JSON.stringify({ 
         title, 
         body, 
-        url: finalUrl 
+        url: finalUrl,
+        icon: card.logo_url || '/icon.png'
       }));
       successCount++;
     } catch (err: any) {
