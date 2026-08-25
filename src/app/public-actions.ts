@@ -16,7 +16,7 @@ export async function saveLeadAction(formData: FormData) {
     return { error: 'El nombre es obligatorio.' };
   }
 
-  const { error } = await supabase
+  const { data: newLead, error } = await supabase
     .from('leads')
     .insert([
       {
@@ -26,7 +26,9 @@ export async function saveLeadAction(formData: FormData) {
         visitor_phone,
         message,
       }
-    ]);
+    ])
+    .select('id')
+    .single();
 
   if (error) {
     console.error('Error inserting lead:', error);
@@ -42,7 +44,7 @@ export async function saveLeadAction(formData: FormData) {
       const parsedSub = JSON.parse(push_subscription);
       const { error: pushError } = await supabase.from('push_subscriptions').insert([{
         card_id,
-        lead_id: null, // Opcional: si quieres vincularlo al lead
+        lead_id: newLead?.id, // Vinculado al lead recién creado
         endpoint: parsedSub.endpoint,
         p256dh: parsedSub.keys.p256dh,
         auth: parsedSub.keys.auth
