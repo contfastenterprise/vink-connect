@@ -5,10 +5,10 @@
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {
-  --color-vink-navy: #071B41;
-  --color-vink-blue: #1267E8;
-  --color-vink-cyan: #12C8E8;
-  --color-vink-sky: #4DD8F2;
+  --color-vink-navy: #050510;
+  --color-vink-blue: #00E5FF;
+  --color-vink-cyan: #00E5FF;
+  --color-vink-sky: #E040FB;
 
   --color-background: var(--background);
   --color-foreground: var(--foreground);
@@ -30,15 +30,15 @@
   --color-input: var(--input);
   --color-ring: var(--ring);
   
-  --color-success: #16A34A;
-  --color-warning: #F59E0B;
-  --color-error: #DC2626;
-  --color-info: #0EA5E9;
+  --color-success: #39FF14;
+  --color-warning: #FFB703;
+  --color-error: #FF0055;
+  --color-info: #00E5FF;
 
-  /* Legacy Material Tokens mapped to Vink Connect */
+  /* Legacy Material Tokens mapped to Retro Gaming Neon Theme */
   --color-surface: var(--card);
   --color-surface-container-lowest: var(--background);
-  --color-surface-container-low: var(--surface-container-low);
+  --color-surface-container-low: var(--background);
   --color-surface-container: var(--surface-container);
   --color-surface-container-high: var(--muted);
   --color-surface-container-highest: var(--surface-highest);
@@ -50,7 +50,6 @@
   --color-on-secondary-container: var(--secondary-foreground);
   --color-secondary-fixed: var(--secondary);
   --color-on-secondary-fixed: var(--secondary-foreground);
-  /* inverse-primary = primary brand color for use on dark or light bg */
   --color-inverse-primary: var(--primary);
   --color-on-background: var(--foreground);
 
@@ -63,75 +62,75 @@
 
 @layer base {
   :root {
-    --vink-navy: #071B41;
-    --vink-blue: #1267E8;
-    --vink-cyan: #12C8E8;
-    --vink-sky: #4DD8F2;
+    --vink-navy: #050510;
+    --vink-blue: #00E5FF;
+    --vink-cyan: #00E5FF;
+    --vink-sky: #E040FB;
 
-    --background: #F8FAFC;
-    --foreground: #0F172A;
-    --card: #FFFFFF;
-    --card-foreground: #0F172A;
-    --popover: #FFFFFF;
-    --popover-foreground: #0F172A;
+    /* Gaming Neon Dark Defaults */
+    --background: #050510;
+    --foreground: #F0F0FF;
+    --card: #0D0D1F;
+    --card-foreground: #F0F0FF;
+    --popover: #0D0D1F;
+    --popover-foreground: #F0F0FF;
     
-    --primary: #1267E8;
+    --primary: #E040FB;
     --primary-foreground: #FFFFFF;
-    --secondary: #E8F4FF;
-    --secondary-foreground: #1267E8;
+    --secondary: rgba(0, 229, 255, 0.15);
+    --secondary-foreground: #00E5FF;
     
-    --muted: #E2E8F0;
-    --muted-foreground: #475569;
+    --muted: #15152A;
+    --muted-foreground: #9494C7;
     
-    --accent: #12C8E8;
-    --accent-foreground: #0F172A;
+    --accent: #00E5FF;
+    --accent-foreground: #050510;
     
-    --destructive: #DC2626;
+    --destructive: #FF0055;
     --destructive-foreground: #FFFFFF;
     
-    --border: #E2E8F0;
-    --input: #E2E8F0;
-    --ring: #1267E8;
+    --border: rgba(220, 60, 255, 0.3);
+    --input: #0D0D1F;
+    --ring: #E040FB;
 
-    /* Extra Legacy Material mappings */
-    --surface-container: #F1F5F9;
-    --surface-container-low: #F8FAFC;
-    --surface-highest: #CBD5E1;
-    --outline: #94A3B8;
+    --surface-container: #121226;
+    --surface-container-low: #0D0D1F;
+    --surface-highest: #1D1D3A;
+    --outline: #6E6EA0;
     
-    --radius: 0.5rem;
+    --radius: 0.75rem;
   }
 
   .dark {
-    --background: #020617;
-    --foreground: #F8FAFC;
-    --card: #0F172A;
-    --card-foreground: #F8FAFC;
-    --popover: #0F172A;
-    --popover-foreground: #F8FAFC;
+    --background: #050510;
+    --foreground: #F0F0FF;
+    --card: #0D0D1F;
+    --card-foreground: #F0F0FF;
+    --popover: #0D0D1F;
+    --popover-foreground: #F0F0FF;
     
-    --primary: #3B82F6;
+    --primary: #E040FB;
     --primary-foreground: #FFFFFF;
-    --secondary: #1E293B;
-    --secondary-foreground: #F8FAFC;
+    --secondary: rgba(0, 229, 255, 0.15);
+    --secondary-foreground: #00E5FF;
     
-    --muted: #1E293B;
-    --muted-foreground: #94A3B8;
+    --muted: #15152A;
+    --muted-foreground: #9494C7;
     
-    --accent: #22D3EE;
-    --accent-foreground: #020617;
+    --accent: #00E5FF;
+    --accent-foreground: #050510;
     
-    --destructive: #DC2626;
-    --destructive-foreground: #F8FAFC;
+    --destructive: #FF0055;
+    --destructive-foreground: #FFFFFF;
     
-    --border: #1E293B;
-    --input: #1E293B;
-    --ring: #3B82F6;
+    --border: rgba(220, 60, 255, 0.3);
+    --input: #0D0D1F;
+    --ring: #E040FB;
 
-    /* Extra Legacy Material mappings */
-    --surface-container: #0F172A;
-    --surface-highest: #334155;
-    --outline: #475569;
+    --surface-container: #121226;
+    --surface-container-low: #0D0D1F;
+    --surface-highest: #1D1D3A;
+    --outline: #6E6EA0;
   }
 }
 
@@ -140,108 +139,91 @@
     @apply border-border;
   }
   body {
-    @apply bg-background text-foreground;
+    background-color: var(--background);
+    color: var(--foreground);
     font-family: var(--font-sans);
+    background-image: 
+      radial-gradient(circle at 50% 0%, rgba(224, 64, 251, 0.12) 0%, transparent 60%),
+      radial-gradient(circle at 100% 100%, rgba(0, 229, 255, 0.08) 0%, transparent 50%);
+    background-attachment: fixed;
   }
 }
 
-/* Vink Connect Official Gradients */
+/* Retro Gaming Neon Visuals */
 .bg-vink-gradient-primary {
-  background: linear-gradient(135deg, #1267E8 0%, #12C8E8 100%);
+  background: linear-gradient(135deg, #E040FB 0%, #00E5FF 100%);
 }
 
 .bg-vink-gradient-deep {
-  background: linear-gradient(135deg, #071B41 0%, #1267E8 55%, #12C8E8 100%);
+  background: linear-gradient(135deg, #050510 0%, #151530 50%, #E040FB 100%);
 }
 
-/* Glass panel and legacy UI enhancements (adapted to Vink colors) */
-.glass-panel {
-    background-color: var(--card);
-    border: 1px solid var(--border);
-    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.04);
+.neon-glow-pink {
+  box-shadow: 0 0 20px rgba(224, 64, 251, 0.4), inset 0 0 10px rgba(224, 64, 251, 0.2);
 }
-.dark .glass-panel {
-    background-color: rgba(15, 23, 42, 0.8);
-    backdrop-filter: blur(16px);
-    border: 1px solid rgba(255, 255, 255, 0.08);
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+
+.neon-glow-cyan {
+  box-shadow: 0 0 20px rgba(0, 229, 255, 0.4), inset 0 0 10px rgba(0, 229, 255, 0.2);
+}
+
+.neon-text-pink {
+  color: #E040FB;
+  text-shadow: 0 0 10px rgba(224, 64, 251, 0.7);
+}
+
+.neon-text-cyan {
+  color: #00E5FF;
+  text-shadow: 0 0 10px rgba(0, 229, 255, 0.7);
+}
+
+.neon-card {
+  background: rgba(13, 13, 31, 0.85);
+  backdrop-filter: blur(16px);
+  border: 1px solid rgba(224, 64, 251, 0.3);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5), 0 0 15px rgba(224, 64, 251, 0.15);
+  transition: all 0.25s ease-out;
+}
+
+.neon-card:hover {
+  border-color: rgba(0, 229, 255, 0.6);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.6), 0 0 25px rgba(0, 229, 255, 0.25);
+  transform: translateY(-2px);
+}
+
+.glass-panel {
+  background: rgba(13, 13, 31, 0.85);
+  backdrop-filter: blur(16px);
+  border: 1px solid rgba(224, 64, 251, 0.25);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+}
+
+.cyber-grid {
+  background-size: 40px 40px;
+  background-image: 
+    linear-gradient(to right, rgba(224, 64, 251, 0.05) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(224, 64, 251, 0.05) 1px, transparent 1px);
 }
 
 .ambient-glow {
-    position: fixed;
-    top: 20%;
-    left: 50%;
-    width: 80vw;
-    height: 80vw;
-    transform: translate(-50%, -50%);
-    background: radial-gradient(circle, rgba(18, 103, 232, 0.05) 0%, rgba(248, 250, 252, 0) 70%);
-    z-index: -1;
-    pointer-events: none;
-}
-.dark .ambient-glow {
-    background: radial-gradient(circle, rgba(59, 130, 246, 0.08) 0%, rgba(2, 6, 23, 0) 70%);
+  position: fixed;
+  top: 15%;
+  left: 50%;
+  width: 90vw;
+  height: 90vw;
+  transform: translate(-50%, -50%);
+  background: radial-gradient(circle, rgba(224, 64, 251, 0.08) 0%, rgba(0, 229, 255, 0.03) 40%, transparent 70%);
+  z-index: -1;
+  pointer-events: none;
 }
 
-/* glass-border utility used in public card */
-.glass-border {
-  border: 1px solid var(--border);
-}
-.dark .glass-border {
-  border: 1px solid rgba(255, 255, 255, 0.1);
-}
-
-/*
- * LIGHT MODE CONTRAST FIXES
- * Components use `border-white/10` which is invisible on white/light backgrounds.
- * In light mode we override these to use the proper Vink border token.
- */
-:root:not(.dark) input,
-:root:not(.dark) textarea,
-:root:not(.dark) select {
-  border-color: var(--border) !important;
-  background-color: #FFFFFF !important;
-  color: var(--foreground) !important;
-}
-:root:not(.dark) input:focus,
-:root:not(.dark) textarea:focus,
-:root:not(.dark) select:focus {
-  border-color: var(--primary) !important;
-  box-shadow: 0 0 0 3px rgba(18, 103, 232, 0.12) !important;
-}
-
-/* Fix nav/bottom-bar in light mode */
-:root:not(.dark) nav {
-  background-color: rgba(255, 255, 255, 0.95) !important;
-  border-color: var(--border) !important;
-  box-shadow: 0 -2px 16px rgba(0, 0, 0, 0.06) !important;
-}
-
-/* Fix header in light mode */
-:root:not(.dark) header {
-  background-color: rgba(255, 255, 255, 0.95) !important;
-  border-color: var(--border) !important;
-  box-shadow: 0 1px 8px rgba(0, 0, 0, 0.06) !important;
-}
-
-/* Fix login card and surface containers in light mode */
-:root:not(.dark) .glass-panel {
-  background-color: #FFFFFF;
-  border: 1px solid var(--border);
-  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.06);
-}
-
-/* hr separators in light mode */
-:root:not(.dark) hr {
-  border-color: var(--border) !important;
-}
-
-/* text-secondary on light bg — ensure it uses the foreground of secondary (Vink Blue) */
-:root:not(.dark) .text-secondary {
-  color: var(--secondary-foreground) !important;
-}
-
-/* bg-secondary-container in light mode → subtle blue background */
-:root:not(.dark) .bg-secondary-container\/10,
-:root:not(.dark) .bg-secondary-container\/20 {
-  background-color: rgba(18, 103, 232, 0.08) !important;
+/* Custom Watermark Badge for marca.png */
+.watermark-badge {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  z-index: 40;
+  pointer-events: none;
+  opacity: 0.85;
+  transition: opacity 0.3s ease;
+  filter: drop-shadow(0 0 12px rgba(224, 64, 251, 0.5));
 }

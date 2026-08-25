@@ -10,9 +10,14 @@ export default function LoginPage() {
       
       <div className="w-full max-w-[440px] p-6 sm:p-10 rounded-2xl bg-card border border-border shadow-lg z-10">
         
-        <div className="text-center mb-10">
-          <h1 className="text-3xl font-bold text-primary mb-2 tracking-tight">Vink Connect</h1>
-          <p className="text-sm text-muted-foreground">Inicia sesión o crea tu cuenta</p>
+        <div className="text-center mb-8 flex flex-col items-center">
+          <img 
+            src="/logo.png" 
+            alt="Vink Connect Logo" 
+            className="h-14 w-auto object-contain mb-3 drop-shadow-[0_0_12px_rgba(224,64,251,0.8)]" 
+          />
+          <h1 className="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-primary to-accent tracking-wider">VINK CONNECT</h1>
+          <p className="text-xs text-muted-foreground mt-1">Plataforma Digital Retro-Futurista</p>
         </div>
 
         <form className="flex flex-col gap-6">
@@ -101,6 +106,16 @@ export default function LoginPage() {
             </button>
           </form>
         </div>
+      </div>
+
+      {/* Marca Watermark Badge */}
+      <div className="fixed bottom-5 right-5 z-40 hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-xl bg-card/90 backdrop-blur-md border border-primary/40 shadow-[0_0_15px_rgba(224,64,251,0.4)] opacity-85 hover:opacity-100 transition duration-200 group">
+        <img 
+          src="/marca.png" 
+          alt="Marca Vink" 
+          className="h-7 w-auto object-contain filter drop-shadow-[0_0_6px_rgba(0,229,255,0.6)] group-hover:scale-105 transition-transform" 
+        />
+        <span className="text-[11px] font-mono text-accent font-medium tracking-wider">VINK CONNECT</span>
       </div>
     </div>
   )

@@ -71,18 +71,26 @@ export default async function DashboardPage({
       {/* Main Container */}
       <div className="ambient-glow"></div>
       {/* TopAppBar */}
-      <header className="fixed top-0 w-full z-50 bg-surface/80 dark:bg-surface/80 backdrop-blur-lg border-b border-white/10 shadow-sm flex justify-between items-center px-margin-mobile md:px-margin-desktop h-16">
+      <header className="fixed top-0 w-full z-50 bg-card/85 backdrop-blur-xl border-b border-primary/30 shadow-[0_4px_20px_rgba(0,0,0,0.5)] flex justify-between items-center px-margin-mobile md:px-margin-desktop h-16">
         <div className="flex items-center gap-3">
+          <a href="/" className="flex items-center gap-2 flex-shrink-0">
+            <img 
+              src="/logo.png" 
+              alt="Vink Connect Logo" 
+              className="h-9 w-auto object-contain drop-shadow-[0_0_10px_rgba(224,64,251,0.7)]" 
+            />
+          </a>
+
           <a href="/?tab=settings" className="flex-shrink-0">
             {profile?.avatar_url ? (
               <img
-                className="w-10 h-10 rounded-full object-cover border border-white/10"
+                className="w-9 h-9 rounded-full object-cover border border-primary/40 shadow-[0_0_8px_rgba(0,229,255,0.4)]"
                 src={profile.avatar_url}
                 alt="Profile"
               />
             ) : (
-              <div className="w-10 h-10 rounded-full bg-primary/20 border border-white/10 flex items-center justify-center">
-                <span className="font-headline-md text-sm text-primary font-bold">
+              <div className="w-9 h-9 rounded-full bg-primary/20 border border-primary/40 flex items-center justify-center shadow-[0_0_8px_rgba(224,64,251,0.4)]">
+                <span className="font-headline-md text-xs text-primary font-bold">
                   {userName
                     .split(' ')
                     .map((w: string) => w[0])
@@ -368,7 +376,15 @@ export default async function DashboardPage({
           <span className="material-symbols-outlined mb-1 text-[22px]">insights</span>
           <span className="font-label-md text-[10px]">Actividad</span>
         </a>
-      </nav>
+      {/* Marca Badge Watermark */}
+      <div className="fixed bottom-5 right-5 z-40 hidden md:flex items-center gap-2 px-3 py-1.5 rounded-xl bg-card/90 backdrop-blur-md border border-primary/40 shadow-[0_0_15px_rgba(224,64,251,0.4)] opacity-85 hover:opacity-100 transition duration-200 group">
+        <img 
+          src="/marca.png" 
+          alt="Marca Vink" 
+          className="h-7 w-auto object-contain filter drop-shadow-[0_0_6px_rgba(0,229,255,0.6)] group-hover:scale-105 transition-transform" 
+        />
+        <span className="text-[11px] font-mono text-accent font-medium tracking-wider">VINK CONNECT</span>
+      </div>
     </div>
   );
 }
