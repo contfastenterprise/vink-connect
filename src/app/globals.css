@@ -35,6 +35,22 @@
   --color-error: #DC2626;
   --color-info: #0EA5E9;
 
+  /* Legacy Material Tokens mapped to Vink Connect */
+  --color-surface: var(--card);
+  --color-surface-container-lowest: var(--background);
+  --color-surface-container-low: var(--background);
+  --color-surface-container: var(--surface-container);
+  --color-surface-container-high: var(--muted);
+  --color-surface-container-highest: var(--surface-highest);
+  --color-on-surface: var(--foreground);
+  --color-on-surface-variant: var(--muted-foreground);
+  --color-outline: var(--outline);
+  --color-outline-variant: var(--border);
+  --color-secondary-container: var(--secondary);
+  --color-on-secondary-container: var(--secondary-foreground);
+  --color-secondary-fixed: var(--secondary);
+  --color-on-secondary-fixed: var(--secondary-foreground);
+
   --radius-lg: var(--radius);
   --radius-md: calc(var(--radius) - 2px);
   --radius-sm: calc(var(--radius) - 4px);
@@ -62,7 +78,7 @@
     --secondary-foreground: #1267E8;
     
     --muted: #E2E8F0;
-    --muted-foreground: #64748B;
+    --muted-foreground: #475569;
     
     --accent: #12C8E8;
     --accent-foreground: #0F172A;
@@ -73,6 +89,11 @@
     --border: #E2E8F0;
     --input: #E2E8F0;
     --ring: #1267E8;
+
+    /* Extra Legacy Material mappings */
+    --surface-container: #F1F5F9;
+    --surface-highest: #CBD5E1;
+    --outline: #94A3B8;
     
     --radius: 0.5rem;
   }
@@ -102,6 +123,11 @@
     --border: #1E293B;
     --input: #1E293B;
     --ring: #3B82F6;
+
+    /* Extra Legacy Material mappings */
+    --surface-container: #0F172A;
+    --surface-highest: #334155;
+    --outline: #475569;
   }
 }
 
@@ -122,4 +148,32 @@
 
 .bg-vink-gradient-deep {
   background: linear-gradient(135deg, #071B41 0%, #1267E8 55%, #12C8E8 100%);
+}
+
+/* Glass panel and legacy UI enhancements (adapted to Vink colors) */
+.glass-panel {
+    background-color: var(--card);
+    border: 1px solid var(--border);
+    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.04);
+}
+.dark .glass-panel {
+    background-color: rgba(15, 23, 42, 0.8);
+    backdrop-filter: blur(16px);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+}
+
+.ambient-glow {
+    position: fixed;
+    top: 20%;
+    left: 50%;
+    width: 80vw;
+    height: 80vw;
+    transform: translate(-50%, -50%);
+    background: radial-gradient(circle, rgba(18, 103, 232, 0.05) 0%, rgba(248, 250, 252, 0) 70%);
+    z-index: -1;
+    pointer-events: none;
+}
+.dark .ambient-glow {
+    background: radial-gradient(circle, rgba(59, 130, 246, 0.08) 0%, rgba(2, 6, 23, 0) 70%);
 }
