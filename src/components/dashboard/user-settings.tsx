@@ -153,7 +153,7 @@ export function UserSettings({ profile, email }: UserSettingsProps) {
                   <button
                     type="button"
                     onClick={() => fileInputRef.current?.click()}
-                    className="px-4 py-2 rounded-lg bg-surface-container-high border border-white/10 font-label-md text-sm text-on-surface hover:bg-surface-container-highest/70 transition duration-150 ease-out"
+                    className="px-4 py-2 rounded-lg bg-muted border border-border text-sm text-foreground hover:bg-muted/80 transition duration-150 ease-out"
                   >
                     Cambiar foto
                   </button>
@@ -200,7 +200,7 @@ export function UserSettings({ profile, email }: UserSettingsProps) {
                 name="full_name"
                 defaultValue={profile?.full_name || ''}
                 placeholder="Tu nombre completo"
-                className="w-full px-4 py-3 rounded-xl bg-surface-container-low border border-white/10 focus:border-primary/50 focus:ring-1 focus:ring-primary/50 focus:outline-none transition duration-150 ease-out font-body-md text-on-surface"
+                className="w-full px-4 py-3 rounded-xl bg-background border border-border focus:border-primary focus:ring-2 focus:ring-primary/20 focus:outline-none transition duration-150 ease-out text-foreground"
               />
             </div>
 
@@ -208,7 +208,7 @@ export function UserSettings({ profile, email }: UserSettingsProps) {
               <label className="font-label-md text-sm text-on-surface-variant">
                 Correo electrónico
               </label>
-              <div className="flex items-center gap-3 px-4 py-3 rounded-xl bg-surface-container-low border border-white/10 opacity-70 cursor-not-allowed">
+              <div className="flex items-center gap-3 px-4 py-3 rounded-xl bg-muted border border-border opacity-70 cursor-not-allowed">
                 <span className="material-symbols-outlined text-on-surface-variant text-[18px]">
                   mail
                 </span>

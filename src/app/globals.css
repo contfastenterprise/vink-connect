@@ -38,7 +38,7 @@
   /* Legacy Material Tokens mapped to Vink Connect */
   --color-surface: var(--card);
   --color-surface-container-lowest: var(--background);
-  --color-surface-container-low: var(--background);
+  --color-surface-container-low: var(--surface-container-low);
   --color-surface-container: var(--surface-container);
   --color-surface-container-high: var(--muted);
   --color-surface-container-highest: var(--surface-highest);
@@ -50,6 +50,9 @@
   --color-on-secondary-container: var(--secondary-foreground);
   --color-secondary-fixed: var(--secondary);
   --color-on-secondary-fixed: var(--secondary-foreground);
+  /* inverse-primary = primary brand color for use on dark or light bg */
+  --color-inverse-primary: var(--primary);
+  --color-on-background: var(--foreground);
 
   --radius-lg: var(--radius);
   --radius-md: calc(var(--radius) - 2px);
@@ -92,6 +95,7 @@
 
     /* Extra Legacy Material mappings */
     --surface-container: #F1F5F9;
+    --surface-container-low: #F8FAFC;
     --surface-highest: #CBD5E1;
     --outline: #94A3B8;
     
@@ -176,4 +180,68 @@
 }
 .dark .ambient-glow {
     background: radial-gradient(circle, rgba(59, 130, 246, 0.08) 0%, rgba(2, 6, 23, 0) 70%);
+}
+
+/* glass-border utility used in public card */
+.glass-border {
+  border: 1px solid var(--border);
+}
+.dark .glass-border {
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/*
+ * LIGHT MODE CONTRAST FIXES
+ * Components use `border-white/10` which is invisible on white/light backgrounds.
+ * In light mode we override these to use the proper Vink border token.
+ */
+:root:not(.dark) input,
+:root:not(.dark) textarea,
+:root:not(.dark) select {
+  border-color: var(--border) !important;
+  background-color: #FFFFFF !important;
+  color: var(--foreground) !important;
+}
+:root:not(.dark) input:focus,
+:root:not(.dark) textarea:focus,
+:root:not(.dark) select:focus {
+  border-color: var(--primary) !important;
+  box-shadow: 0 0 0 3px rgba(18, 103, 232, 0.12) !important;
+}
+
+/* Fix nav/bottom-bar in light mode */
+:root:not(.dark) nav {
+  background-color: rgba(255, 255, 255, 0.95) !important;
+  border-color: var(--border) !important;
+  box-shadow: 0 -2px 16px rgba(0, 0, 0, 0.06) !important;
+}
+
+/* Fix header in light mode */
+:root:not(.dark) header {
+  background-color: rgba(255, 255, 255, 0.95) !important;
+  border-color: var(--border) !important;
+  box-shadow: 0 1px 8px rgba(0, 0, 0, 0.06) !important;
+}
+
+/* Fix login card and surface containers in light mode */
+:root:not(.dark) .glass-panel {
+  background-color: #FFFFFF;
+  border: 1px solid var(--border);
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.06);
+}
+
+/* hr separators in light mode */
+:root:not(.dark) hr {
+  border-color: var(--border) !important;
+}
+
+/* text-secondary on light bg — ensure it uses the foreground of secondary (Vink Blue) */
+:root:not(.dark) .text-secondary {
+  color: var(--secondary-foreground) !important;
+}
+
+/* bg-secondary-container in light mode → subtle blue background */
+:root:not(.dark) .bg-secondary-container\/10,
+:root:not(.dark) .bg-secondary-container\/20 {
+  background-color: rgba(18, 103, 232, 0.08) !important;
 }

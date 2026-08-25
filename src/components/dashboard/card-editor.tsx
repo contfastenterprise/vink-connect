@@ -120,7 +120,7 @@ export function CardEditor({ initialData, isNewCard, onSaved, onDeleted }: CardE
             </div>
           </div>
 
-          <hr className="border-white/10 my-2" />
+          <hr className="border-border my-2" />
 
           {/* Basic Info */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -132,7 +132,7 @@ export function CardEditor({ initialData, isNewCard, onSaved, onDeleted }: CardE
                 id="name" 
                 name="name" 
                 defaultValue={initialData?.name || ''}
-                className="w-full px-4 py-3 rounded-xl bg-surface-container-low border border-white/10 focus:border-primary/50 focus:ring-1 focus:ring-primary/50 focus:outline-none transition duration-150 ease-out font-body-md text-on-surface"
+                className="w-full px-4 py-3 rounded-xl bg-background border border-border focus:border-primary focus:ring-2 focus:ring-primary/20 focus:outline-none transition duration-150 ease-out text-foreground"
                 placeholder="Ej: Sofía Martínez"
               />
             </div>
@@ -143,7 +143,7 @@ export function CardEditor({ initialData, isNewCard, onSaved, onDeleted }: CardE
                 id="title" 
                 name="title" 
                 defaultValue={initialData?.title || ''}
-                className="w-full px-4 py-3 rounded-xl bg-surface-container-low border border-white/10 focus:border-primary/50 focus:ring-1 focus:ring-primary/50 focus:outline-none transition duration-150 ease-out font-body-md text-on-surface"
+                className="w-full px-4 py-3 rounded-xl bg-background border border-border focus:border-primary focus:ring-2 focus:ring-primary/20 focus:outline-none transition duration-150 ease-out text-foreground"
                 placeholder="Ej: Directora de Marketing"
               />
             </div>
@@ -168,7 +168,7 @@ export function CardEditor({ initialData, isNewCard, onSaved, onDeleted }: CardE
               name="bio" 
               rows={3}
               defaultValue={initialData?.theme_config?.bio || ''}
-              className="w-full px-4 py-3 rounded-xl bg-surface-container-low border border-white/10 focus:border-primary/50 focus:ring-1 focus:ring-primary/50 focus:outline-none transition duration-150 ease-out font-body-md text-on-surface resize-none"
+              className="w-full px-4 py-3 rounded-xl bg-background border border-border focus:border-primary focus:ring-2 focus:ring-primary/20 focus:outline-none transition duration-150 ease-out text-foreground resize-none"
               placeholder="Ej: Crafting intuitive digital experiences that bridge the gap between complex technology and human interaction."
             />
             <p className="text-xs text-on-surface-variant/70 mt-1">Si lo dejas vacío, se mostrará un texto por defecto en tu tarjeta.</p>
@@ -183,7 +183,7 @@ export function CardEditor({ initialData, isNewCard, onSaved, onDeleted }: CardE
                 id="phone" 
                 name="phone" 
                 defaultValue={initialData?.phone || ''}
-                className="w-full px-4 py-3 rounded-xl bg-surface-container-low border border-white/10 focus:border-primary/50 focus:ring-1 focus:ring-primary/50 focus:outline-none transition duration-150 ease-out font-body-md text-on-surface"
+                className="w-full px-4 py-3 rounded-xl bg-background border border-border focus:border-primary focus:ring-2 focus:ring-primary/20 focus:outline-none transition duration-150 ease-out text-foreground"
                 placeholder="+34 600 000 000"
               />
             </div>
@@ -194,7 +194,7 @@ export function CardEditor({ initialData, isNewCard, onSaved, onDeleted }: CardE
                 id="email" 
                 name="email" 
                 defaultValue={initialData?.email || ''}
-                className="w-full px-4 py-3 rounded-xl bg-surface-container-low border border-white/10 focus:border-primary/50 focus:ring-1 focus:ring-primary/50 focus:outline-none transition duration-150 ease-out font-body-md text-on-surface"
+                className="w-full px-4 py-3 rounded-xl bg-background border border-border focus:border-primary focus:ring-2 focus:ring-primary/20 focus:outline-none transition duration-150 ease-out text-foreground"
                 placeholder="contacto@ejemplo.com"
               />
             </div>
@@ -207,13 +207,13 @@ export function CardEditor({ initialData, isNewCard, onSaved, onDeleted }: CardE
               id="website" 
               name="website" 
               defaultValue={initialData?.website || ''}
-              className="w-full px-4 py-3 rounded-xl bg-surface-container-low border border-white/10 focus:border-primary/50 focus:ring-1 focus:ring-primary/50 focus:outline-none transition duration-150 ease-out font-body-md text-on-surface"
+              className="w-full px-4 py-3 rounded-xl bg-background border border-border focus:border-primary focus:ring-2 focus:ring-primary/20 focus:outline-none transition duration-150 ease-out text-foreground"
               placeholder="https://midominio.com"
             />
           </div>
 
           {/* Separator */}
-          <hr className="border-white/10 my-4" />
+          <hr className="border-border my-4" />
 
           {/* Redes Sociales */}
           <h3 className="font-headline-sm text-[16px] text-on-surface mb-2">Redes Sociales</h3>
@@ -225,7 +225,7 @@ export function CardEditor({ initialData, isNewCard, onSaved, onDeleted }: CardE
                 id="social_linkedin" 
                 name="social_linkedin" 
                 defaultValue={initialData?.social_links?.linkedin || ''}
-                className="w-full px-4 py-3 rounded-xl bg-surface-container-low border border-white/10 focus:border-primary/50 focus:ring-1 focus:ring-primary/50 focus:outline-none transition duration-150 ease-out font-body-md text-on-surface"
+                className="w-full px-4 py-3 rounded-xl bg-background border border-border focus:border-primary focus:ring-2 focus:ring-primary/20 focus:outline-none transition duration-150 ease-out text-foreground"
                 placeholder="https://linkedin.com/in/tu-perfil"
               />
             </div>
@@ -236,7 +236,7 @@ export function CardEditor({ initialData, isNewCard, onSaved, onDeleted }: CardE
                 id="social_twitter" 
                 name="social_twitter" 
                 defaultValue={initialData?.social_links?.twitter || ''}
-                className="w-full px-4 py-3 rounded-xl bg-surface-container-low border border-white/10 focus:border-primary/50 focus:ring-1 focus:ring-primary/50 focus:outline-none transition duration-150 ease-out font-body-md text-on-surface"
+                className="w-full px-4 py-3 rounded-xl bg-background border border-border focus:border-primary focus:ring-2 focus:ring-primary/20 focus:outline-none transition duration-150 ease-out text-foreground"
                 placeholder="https://twitter.com/tu-usuario"
               />
             </div>
@@ -247,7 +247,7 @@ export function CardEditor({ initialData, isNewCard, onSaved, onDeleted }: CardE
                 id="social_instagram" 
                 name="social_instagram" 
                 defaultValue={initialData?.social_links?.instagram || ''}
-                className="w-full px-4 py-3 rounded-xl bg-surface-container-low border border-white/10 focus:border-primary/50 focus:ring-1 focus:ring-primary/50 focus:outline-none transition duration-150 ease-out font-body-md text-on-surface"
+                className="w-full px-4 py-3 rounded-xl bg-background border border-border focus:border-primary focus:ring-2 focus:ring-primary/20 focus:outline-none transition duration-150 ease-out text-foreground"
                 placeholder="https://instagram.com/tu-usuario"
               />
             </div>
@@ -258,14 +258,14 @@ export function CardEditor({ initialData, isNewCard, onSaved, onDeleted }: CardE
                 id="social_github" 
                 name="social_github" 
                 defaultValue={initialData?.social_links?.github || ''}
-                className="w-full px-4 py-3 rounded-xl bg-surface-container-low border border-white/10 focus:border-primary/50 focus:ring-1 focus:ring-primary/50 focus:outline-none transition duration-150 ease-out font-body-md text-on-surface"
+                className="w-full px-4 py-3 rounded-xl bg-background border border-border focus:border-primary focus:ring-2 focus:ring-primary/20 focus:outline-none transition duration-150 ease-out text-foreground"
                 placeholder="https://github.com/tu-usuario"
               />
             </div>
           </div>
 
           {/* Separator */}
-          <hr className="border-white/10 my-4" />
+          <hr className="border-border my-4" />
 
           {/* Personalización (Theme) */}
           <h3 className="font-headline-sm text-[16px] text-on-surface mb-2">Personalización</h3>
@@ -311,7 +311,7 @@ export function CardEditor({ initialData, isNewCard, onSaved, onDeleted }: CardE
           <button 
             type="submit" 
             disabled={isPending}
-            className="mt-4 w-full py-4 rounded-xl bg-inverse-primary text-white font-label-md transition duration-150 ease-out active:scale-[0.97] shadow-[0_0_15px_rgba(109,59,215,0.2)] hover:shadow-[0_0_25px_rgba(109,59,215,0.4)] flex justify-center items-center gap-2 disabled:opacity-50"
+            className="mt-4 w-full py-4 rounded-xl bg-primary text-white font-semibold hover:bg-primary/90 transition duration-150 ease-out active:scale-[0.97] flex justify-center items-center gap-2 disabled:opacity-50"
           >
             {isPending ? (
               <span className="material-symbols-outlined animate-spin text-[20px]">refresh</span>
