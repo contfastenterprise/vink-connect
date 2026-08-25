@@ -1,20 +1,21 @@
-import { createClient } from '@/utils/supabase/server';
+// LeadList ahora recibe leads como prop pre-cargada desde el Server Component padre (page.tsx)
+// Esto elimina el doble fetch a la tabla leads que existía antes.
 
-interface LeadListProps {
-  cardId?: string;
+interface Lead {
+  id: string;
+  card_id: string;
+  visitor_name: string;
+  visitor_email?: string;
+  visitor_phone?: string;
+  created_at: string;
 }
 
-export async function LeadList({ cardId }: LeadListProps) {
-  if (!cardId) return <div className="p-4 text-on-surface-variant text-center">Configura tu tarjeta primero.</div>;
+interface LeadListProps {
+  leads: Lead[];
+}
 
-  const supabase = await createClient();
-  const { data: leads, error } = await supabase
-    .from('leads')
-    .select('*')
-    .eq('card_id', cardId)
-    .order('created_at', { ascending: false });
-
-  if (error || !leads || leads.length === 0) {
+export function LeadList({ leads }: LeadListProps) {
+  if (!leads || leads.length === 0) {
     return (
       <div className="p-8 flex flex-col items-center justify-center text-on-surface-variant gap-2 text-center">
         <span className="material-symbols-outlined text-4xl opacity-50">contacts</span>

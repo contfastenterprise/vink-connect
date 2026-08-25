@@ -59,7 +59,7 @@ export function CardListGrid({ cards, activeCardId, isPro }: CardListGridProps) 
           </div>
           <button
             onClick={handleCreateNewClick}
-            className="px-4 py-2.5 rounded-xl bg-inverse-primary text-white font-label-md text-xs transition duration-150 ease-out active:scale-[0.97] shadow-[0_0_15px_rgba(109,59,215,0.25)] hover:shadow-[0_0_25px_rgba(109,59,215,0.45)] flex items-center gap-2 font-semibold"
+            className="px-4 py-2.5 rounded-xl bg-primary text-white font-label-md text-xs transition duration-150 ease-out active:scale-[0.97] shadow-[0_0_20px_rgba(224,64,251,0.4)] hover:shadow-[0_0_30px_rgba(224,64,251,0.65)] flex items-center gap-2 font-semibold border border-primary/40"
           >
             <span className="material-symbols-outlined text-[18px]">add</span>
             <span>Nueva Tarjeta</span>
@@ -79,23 +79,23 @@ export function CardListGrid({ cards, activeCardId, isPro }: CardListGridProps) 
             return (
               <div
                 key={card.id}
-                className={`glass-panel rounded-2xl p-5 flex flex-col justify-between space-y-4 relative group transition duration-200 border ${
+                className={`neon-card rounded-2xl p-5 flex flex-col justify-between space-y-4 relative group transition duration-200 ${
                   isActive
-                    ? 'border-primary/50 shadow-[0_0_20px_rgba(109,59,215,0.2)]'
-                    : 'border-white/10 hover:border-white/25'
+                    ? 'border-accent shadow-[0_0_25px_rgba(0,229,255,0.35)]'
+                    : 'hover:border-primary/50'
                 }`}
               >
                 {/* Active Badge */}
                 {isActive && (
-                  <div className="absolute top-4 right-4 flex items-center gap-1 bg-primary/20 border border-primary/40 px-2.5 py-0.5 rounded-full text-primary font-label-md text-[10px] uppercase font-bold">
-                    <span className="w-1.5 h-1.5 rounded-full bg-primary animate-pulse"></span>
+                  <div className="absolute top-4 right-4 flex items-center gap-1 bg-accent/20 border border-accent/40 px-2.5 py-0.5 rounded-full text-accent font-label-md text-[10px] uppercase font-bold drop-shadow-[0_0_8px_rgba(0,229,255,0.6)]">
+                    <span className="w-1.5 h-1.5 rounded-full bg-accent animate-pulse"></span>
                     Activa
                   </div>
                 )}
 
                 {/* Card Header Info */}
                 <div className="flex items-start gap-4">
-                  <div className="relative w-14 h-14 rounded-full bg-surface-container-high border border-white/10 overflow-hidden flex-shrink-0 flex items-center justify-center">
+                  <div className="relative w-14 h-14 rounded-full bg-muted border border-border overflow-hidden flex-shrink-0 flex items-center justify-center shadow-[0_0_10px_rgba(224,64,251,0.3)]">
                     {card.logo_url ? (
                       <img src={card.logo_url} alt={card.name} className="w-full h-full object-cover" />
                     ) : (
@@ -106,16 +106,16 @@ export function CardListGrid({ cards, activeCardId, isPro }: CardListGridProps) 
                   </div>
 
                   <div className="flex-1 min-w-0 pr-12">
-                    <h4 className="font-headline-sm text-base text-on-surface font-bold truncate">
+                    <h4 className="font-headline-sm text-base text-foreground font-bold truncate">
                       {card.name}
                     </h4>
                     {card.title && (
-                      <p className="font-body-sm text-xs text-on-surface-variant truncate">
+                      <p className="font-body-sm text-xs text-muted-foreground truncate">
                         {card.title}
                       </p>
                     )}
                     {card.company && (
-                      <p className="font-body-sm text-[11px] text-on-surface-variant/70 truncate">
+                      <p className="font-body-sm text-[11px] text-muted-foreground/70 truncate">
                         {card.company}
                       </p>
                     )}
@@ -123,7 +123,7 @@ export function CardListGrid({ cards, activeCardId, isPro }: CardListGridProps) 
                       href={`/c/${card.slug}`}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="inline-flex items-center gap-1 font-mono text-[11px] text-primary hover:underline mt-1 truncate max-w-full"
+                      className="inline-flex items-center gap-1 font-mono text-[11px] text-accent hover:underline mt-1 truncate max-w-full"
                     >
                       <span>/c/{card.slug}</span>
                       <span className="material-symbols-outlined text-[12px]">open_in_new</span>
@@ -132,7 +132,7 @@ export function CardListGrid({ cards, activeCardId, isPro }: CardListGridProps) 
                 </div>
 
                 {/* Card Actions */}
-                <div className="pt-3 border-t border-white/10 grid grid-cols-4 gap-2">
+                <div className="pt-3 border-t border-border/60 grid grid-cols-4 gap-2">
                   <a
                     href={`/?tab=editor&cardId=${card.id}`}
                     className="flex flex-col items-center justify-center p-2 rounded-xl bg-surface-container-low border border-white/5 hover:bg-surface-container-high transition text-on-surface-variant hover:text-on-surface"

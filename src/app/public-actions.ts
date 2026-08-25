@@ -75,6 +75,7 @@ export async function trackViewAction(cardId: string) {
     return { error: 'Ocurrió un error al registrar la visita.' };
   }
 
-  revalidatePath('/');
+  // No revalidamos '/' globalmente — eso destruiría el caché del dashboard en cada visita.
+  // El counter de vistas se actualizará en la próxima navegación del propietario.
   return { success: true };
 }

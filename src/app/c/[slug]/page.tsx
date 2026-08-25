@@ -1,8 +1,12 @@
 import { Card } from '@/types';
 import { createClient } from '@/utils/supabase/server';
+import Image from 'next/image';
 import { LeadForm } from '@/components/public-card/lead-form';
 import { ViewTracker } from '@/components/public-card/view-tracker';
 import { ShareButton } from '@/components/public-card/share-button';
+
+// Revalidar la página cada hora (ISR) — tarjetas públicas servidas desde CDN
+export const revalidate = 3600;
 
 // Fetch card from Supabase
 async function getCardBySlug(slug: string): Promise<Card | null> {
@@ -71,8 +75,16 @@ export default async function PublicCardPage({ params }: { params: Promise<{ slu
       {/* TopAppBar */}
       <header className="fixed top-0 w-full z-50 bg-surface/80 dark:bg-surface/80 backdrop-blur-lg border-b border-white/10 shadow-sm flex justify-between items-center px-margin-mobile md:px-margin-desktop h-16 max-w-[600px] mx-auto left-0 right-0">
         <div className="flex items-center gap-sm">
-          <div className="w-8 h-8 rounded-full overflow-hidden border border-white/20">
-            <img alt="Company Logo" className="w-full h-full object-cover" src={card.logo_url || "https://api.dicebear.com/7.x/initials/svg?seed=" + card.company}/>
+          <div className="w-8 h-8 rounded-full overflow-hidden border border-white/20 relative">
+            {/* Imagen de empresa en header — usa next/image para URLs externas */}
+            <Image
+              alt="Company Logo"
+              className="object-cover"
+              fill
+              sizes="32px"
+              src={card.logo_url?.startsWith('data:') ? card.logo_url : (card.logo_url || `https://api.dicebear.com/7.x/initials/svg?seed=${card.company}`)}
+              unoptimized={card.logo_url?.startsWith('data:')}
+            />
           </div>
           <span className="font-headline-md text-headline-md font-bold text-primary dark:text-primary">{card.company || 'Vink Connect'}</span>
         </div>
@@ -84,8 +96,17 @@ export default async function PublicCardPage({ params }: { params: Promise<{ slu
         <section className="flex flex-col items-center text-center gap-4 relative">
           <div className="relative group">
             <div className="absolute inset-0 rounded-full bg-primary-container/40 blur-[32px] transition duration-150 ease-out"></div>
-            <div className="relative w-28 h-28 md:w-32 md:h-32 rounded-full p-[2px] bg-gradient-to-b from-primary/80 to-surface-container-lowest z-10 glass-border">
-              <img alt="Profile" className="w-full h-full rounded-full object-cover border-4 border-background" src={card.logo_url || "https://api.dicebear.com/7.x/initials/svg?seed=" + card.name}/>
+            <div className="relative w-28 h-28 md:w-32 md:h-32 rounded-full p-[2px] bg-gradient-to-b from-primary/80 to-surface-container-lowest z-10 glass-border overflow-hidden">
+              {/* Avatar principal — next/image con prioridad alta (above the fold) */}
+              <Image
+                alt="Profile"
+                className="rounded-full object-cover border-4 border-background"
+                fill
+                sizes="(max-width: 768px) 112px, 128px"
+                src={card.logo_url?.startsWith('data:') ? card.logo_url : (card.logo_url || `https://api.dicebear.com/7.x/initials/svg?seed=${card.name}`)}
+                unoptimized={card.logo_url?.startsWith('data:')}
+                priority
+              />
             </div>
           </div>
           <div className="flex flex-col mt-2 z-10">

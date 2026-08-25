@@ -69,38 +69,38 @@ export function QRView({ slug }: QRViewProps) {
       </div>
 
       {/* Ticket / Card Container */}
-      <div className="w-full bg-surface-container-low border border-white/10 rounded-[32px] overflow-hidden shadow-[0_20px_40px_rgba(0,0,0,0.4)] relative">
+      <div className="w-full neon-card rounded-[32px] overflow-hidden shadow-[0_20px_50px_rgba(0,0,0,0.6)] relative border border-primary/40">
         {/* Glow behind QR */}
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full bg-primary/10 rounded-full blur-[80px] pointer-events-none"></div>
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full bg-primary/15 rounded-full blur-[80px] pointer-events-none"></div>
         
         <div className="p-8 flex flex-col items-center">
-          <div className="bg-white p-5 rounded-3xl shadow-[0_0_20px_rgba(0,0,0,0.5)] relative z-10 transition duration-150 ease-out hover:scale-[1.02]">
+          <div className="bg-white p-5 rounded-3xl shadow-[0_0_25px_rgba(224,64,251,0.5)] relative z-10 transition duration-150 ease-out hover:scale-[1.02]">
             <QRCode 
               id="QRCode"
               value={cardUrl}
               size={220}
               level="H"
               bgColor="#ffffff"
-              fgColor="#011230"
+              fgColor="#050510"
               style={{ width: "100%", height: "auto" }}
             />
           </div>
         </div>
 
         {/* Dashed divider */}
-        <div className="w-full h-0 border-t-2 border-dashed border-white/10 relative">
-          <div className="absolute -left-3 -top-[12px] w-6 h-6 bg-background rounded-full border border-white/10"></div>
-          <div className="absolute -right-3 -top-[12px] w-6 h-6 bg-background rounded-full border border-white/10"></div>
+        <div className="w-full h-0 border-t-2 border-dashed border-primary/30 relative">
+          <div className="absolute -left-3 -top-[12px] w-6 h-6 bg-background rounded-full border border-primary/30"></div>
+          <div className="absolute -right-3 -top-[12px] w-6 h-6 bg-background rounded-full border border-primary/30"></div>
         </div>
 
-        <div className="p-6 bg-surface-container/50">
+        <div className="p-6 bg-card/80">
           <div className="flex flex-col gap-3">
             <button 
               onClick={handleCopy}
-              className="w-full flex items-center justify-between bg-surface-container-high border border-white/5 rounded-xl p-3 relative z-10 hover:bg-surface-container-highest transition duration-150 ease-out active:scale-[0.97]"
+              className="w-full flex items-center justify-between bg-muted border border-border rounded-xl p-3 relative z-10 hover:border-accent transition duration-150 ease-out active:scale-[0.97]"
             >
-              <span className="font-mono text-xs text-on-surface-variant truncate mr-2">{cardUrl}</span>
-              <div className={`w-8 h-8 rounded-lg flex items-center justify-center transition-colors duration-150 ease-out ${copied ? 'bg-primary/20 text-primary' : 'bg-surface-container-highest text-secondary'}`}>
+              <span className="font-mono text-xs text-accent truncate mr-2">{cardUrl}</span>
+              <div className={`w-8 h-8 rounded-lg flex items-center justify-center transition-colors duration-150 ease-out ${copied ? 'bg-primary/20 text-primary' : 'bg-secondary text-accent'}`}>
                 <span className="material-symbols-outlined text-[16px]">
                   {copied ? 'check' : 'content_copy'}
                 </span>
@@ -109,7 +109,7 @@ export function QRView({ slug }: QRViewProps) {
 
             <button 
               onClick={downloadQR}
-              className="w-full py-3.5 rounded-xl bg-inverse-primary text-white font-label-md transition duration-150 ease-out active:scale-[0.97] hover:bg-inverse-primary/90 flex justify-center items-center gap-2 shadow-[0_0_15px_rgba(109,59,215,0.2)]"
+              className="w-full py-3.5 rounded-xl bg-primary text-white font-semibold transition duration-150 ease-out active:scale-[0.97] hover:bg-primary/90 flex justify-center items-center gap-2 shadow-[0_0_20px_rgba(224,64,251,0.4)] border border-primary/40"
             >
               <span className="material-symbols-outlined text-[18px]">download</span>
               Guardar Imagen

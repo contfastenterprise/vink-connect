@@ -1,5 +1,6 @@
 import { createClient } from '@/utils/supabase/server';
 import { redirect } from 'next/navigation';
+import Image from 'next/image';
 import { CardEditor } from '@/components/dashboard/card-editor';
 import { QRView } from '@/components/dashboard/qr-view';
 import { LeadList } from '@/components/dashboard/lead-list';
@@ -27,19 +28,19 @@ export default async function DashboardPage({
     redirect('/auth/login');
   }
 
-  // Fetch user profile
-  const { data: profile } = await supabase
-    .from('profiles')
-    .select('*')
-    .eq('id', user.id)
-    .single();
-
-  // Fetch user's cards list
-  const { data: cardsData } = await supabase
-    .from('cards')
-    .select('*')
-    .eq('user_id', user.id)
-    .order('created_at', { ascending: true });
+  // Paralelizar profile + cards para evitar waterfall de queries
+  const [{ data: profile }, { data: cardsData }] = await Promise.all([
+    supabase
+      .from('profiles')
+      .select('id, full_name, avatar_url, plan')
+      .eq('id', user.id)
+      .single(),
+    supabase
+      .from('cards')
+      .select('id, user_id, name, title, company, phone, email, website, slug, logo_url, social_links, theme_config, views, created_at, updated_at')
+      .eq('user_id', user.id)
+      .order('created_at', { ascending: true }),
+  ]);
 
   const cards: Card[] = (cardsData as Card[]) || [];
   const isPro = profile?.plan === 'pro';
@@ -51,20 +52,23 @@ export default async function DashboardPage({
   const userName = profile?.full_name || user.email?.split('@')[0] || 'Usuario';
   const activeCardId = activeCard?.id || '';
 
-  // Fetch real leads count for active card
+  // Fetch leads del activeCard en UNA sola query (count + data) para evitar el doble fetch
+  // LeadList recibirá los datos pre-cargados como prop en lugar de hacer su propia query
+  let leads: any[] = [];
   let leadsCount = 0;
   if (activeCardId) {
-    const { count, error } = await supabase
+    const { data: leadsData } = await supabase
       .from('leads')
-      .select('*', { count: 'exact', head: true })
-      .eq('card_id', activeCardId);
-    if (!error && count !== null) {
-      leadsCount = count;
-    }
+      .select('id, card_id, visitor_name, visitor_email, visitor_phone, created_at')
+      .eq('card_id', activeCardId)
+      .order('created_at', { ascending: false });
+    leads = leadsData || [];
+    leadsCount = leads.length;
   }
 
   // Si existe una columna 'views' en cards, la usamos, sino 0
   const viewsCount = (activeCard as any)?.views || 0;
+
 
   return (
     <div className="min-h-screen relative font-body-md overflow-x-hidden pt-16 pb-20 md:pb-0">
@@ -74,32 +78,14 @@ export default async function DashboardPage({
       <header className="fixed top-0 w-full z-50 bg-card/85 backdrop-blur-xl border-b border-primary/30 shadow-[0_4px_20px_rgba(0,0,0,0.5)] flex justify-between items-center px-margin-mobile md:px-margin-desktop h-16">
         <div className="flex items-center gap-3">
           <a href="/" className="flex items-center gap-2 flex-shrink-0">
-            <img 
-              src="/logo.png" 
-              alt="Vink Connect Logo" 
-              className="h-9 w-auto object-contain drop-shadow-[0_0_10px_rgba(224,64,251,0.7)]" 
+            <Image
+              src="/logo.png"
+              alt="Vink Connect Logo"
+              width={120}
+              height={36}
+              className="h-9 w-auto object-contain drop-shadow-[0_0_10px_rgba(224,64,251,0.7)]"
+              priority
             />
-          </a>
-
-          <a href="/?tab=settings" className="flex-shrink-0">
-            {profile?.avatar_url ? (
-              <img
-                className="w-9 h-9 rounded-full object-cover border border-primary/40 shadow-[0_0_8px_rgba(0,229,255,0.4)]"
-                src={profile.avatar_url}
-                alt="Profile"
-              />
-            ) : (
-              <div className="w-9 h-9 rounded-full bg-primary/20 border border-primary/40 flex items-center justify-center shadow-[0_0_8px_rgba(224,64,251,0.4)]">
-                <span className="font-headline-md text-xs text-primary font-bold">
-                  {userName
-                    .split(' ')
-                    .map((w: string) => w[0])
-                    .slice(0, 2)
-                    .join('')
-                    .toUpperCase()}
-                </span>
-              </div>
-            )}
           </a>
 
           {/* Card Selector Component in Header */}
@@ -113,61 +99,66 @@ export default async function DashboardPage({
         </div>
 
         {/* Desktop Navigation */}
-        <div className="hidden md:flex items-center gap-8">
+        <div className="hidden md:flex items-center gap-6">
           <a
-            className={`font-label-md uppercase tracking-wider transition-colors duration-150 ease-out ${
+            className={`font-label-md text-xs uppercase tracking-widest px-3 py-1.5 rounded-lg transition-all duration-200 ease-out flex items-center gap-1.5 ${
               tab === 'cards'
-                ? 'text-secondary font-bold'
-                : 'text-on-surface-variant hover:text-secondary'
+                ? 'text-accent font-bold bg-accent/15 border border-accent/50 shadow-[0_0_12px_rgba(0,229,255,0.4)]'
+                : 'text-foreground/80 font-semibold hover:text-accent hover:bg-accent/10'
             }`}
             href={`/?tab=cards${activeCardId ? `&cardId=${activeCardId}` : ''}`}
           >
+            <span className="material-symbols-outlined text-[18px]">style</span>
             Mis Tarjetas
           </a>
           <a
-            className={`font-label-md uppercase tracking-wider transition-colors duration-150 ease-out ${
+            className={`font-label-md text-xs uppercase tracking-widest px-3 py-1.5 rounded-lg transition-all duration-200 ease-out flex items-center gap-1.5 ${
               tab === 'editor'
-                ? 'text-secondary font-bold'
-                : 'text-on-surface-variant hover:text-secondary'
+                ? 'text-accent font-bold bg-accent/15 border border-accent/50 shadow-[0_0_12px_rgba(0,229,255,0.4)]'
+                : 'text-foreground/80 font-semibold hover:text-accent hover:bg-accent/10'
             }`}
             href={`/?tab=editor${activeCardId ? `&cardId=${activeCardId}` : ''}`}
           >
+            <span className="material-symbols-outlined text-[18px]">contact_page</span>
             Editor
           </a>
           <a
-            className={`font-label-md uppercase tracking-wider transition-colors duration-150 ease-out ${
+            className={`font-label-md text-xs uppercase tracking-widest px-3 py-1.5 rounded-lg transition-all duration-200 ease-out flex items-center gap-1.5 ${
               tab === 'qr'
-                ? 'text-secondary font-bold'
-                : 'text-on-surface-variant hover:text-secondary'
+                ? 'text-accent font-bold bg-accent/15 border border-accent/50 shadow-[0_0_12px_rgba(0,229,255,0.4)]'
+                : 'text-foreground/80 font-semibold hover:text-accent hover:bg-accent/10'
             }`}
             href={`/?tab=qr${activeCardId ? `&cardId=${activeCardId}` : ''}`}
           >
+            <span className="material-symbols-outlined text-[18px]">qr_code_2</span>
             Código QR
           </a>
           <a
-            className={`font-label-md uppercase tracking-wider transition-colors duration-150 ease-out ${
+            className={`font-label-md text-xs uppercase tracking-widest px-3 py-1.5 rounded-lg transition-all duration-200 ease-out flex items-center gap-1.5 ${
               tab === 'activity'
-                ? 'text-secondary font-bold'
-                : 'text-on-surface-variant hover:text-secondary'
+                ? 'text-accent font-bold bg-accent/15 border border-accent/50 shadow-[0_0_12px_rgba(0,229,255,0.4)]'
+                : 'text-foreground/80 font-semibold hover:text-accent hover:bg-accent/10'
             }`}
             href={`/?tab=activity${activeCardId ? `&cardId=${activeCardId}` : ''}`}
           >
+            <span className="material-symbols-outlined text-[18px]">insights</span>
             Actividad
           </a>
         </div>
 
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-3">
           <ThemeToggle />
           <a
             href="/?tab=settings"
-            className={`w-10 h-10 rounded-full flex items-center justify-center transition duration-150 ease-out active:scale-[0.97] ${
+            title="Ajustes de cuenta"
+            className={`w-10 h-10 rounded-xl flex items-center justify-center transition-all duration-200 ease-out active:scale-[0.97] ${
               tab === 'settings'
-                ? 'bg-primary/20 text-primary'
-                : 'text-primary dark:text-primary hover:bg-surface-container-highest/50'
+                ? 'bg-primary/25 text-primary border border-primary/60 shadow-[0_0_12px_rgba(224,64,251,0.6)]'
+                : 'text-foreground/80 border border-transparent hover:border-primary/40 hover:text-primary hover:bg-primary/10'
             }`}
           >
             <span
-              className="material-symbols-outlined"
+              className="material-symbols-outlined text-xl"
               style={tab === 'settings' ? { fontVariationSettings: "'FILL' 1" } : {}}
             >
               settings
@@ -282,7 +273,7 @@ export default async function DashboardPage({
                 <h3 className="font-headline-md text-xl text-on-surface">Contactos Recientes</h3>
               </div>
               <div className="glass-panel rounded-xl divide-y divide-white/10 flex flex-col overflow-hidden">
-                <LeadList cardId={activeCard?.id} />
+                <LeadList leads={leads} />
               </div>
             </section>
           </>
@@ -326,13 +317,13 @@ export default async function DashboardPage({
       </main>
 
       {/* BottomNavBar (Mobile Only) */}
-      <nav className="md:hidden fixed bottom-0 w-full z-50 rounded-t-xl bg-surface-container/80 dark:bg-surface-container/80 backdrop-blur-xl border-t border-white/10 shadow-[0_-8px_32px_rgba(0,0,0,0.4)] flex justify-around items-center h-20 pb-safe px-2">
+      <nav className="md:hidden fixed bottom-0 w-full z-50 rounded-t-2xl bg-card/90 backdrop-blur-xl border-t border-primary/30 shadow-[0_-8px_32px_rgba(0,0,0,0.6)] flex justify-around items-center h-20 pb-safe px-2">
         <a
           href={`/?tab=cards${activeCardId ? `&cardId=${activeCardId}` : ''}`}
           className={`flex flex-col items-center justify-center transition duration-150 ease-out active:scale-[0.97] ${
             tab === 'cards'
-              ? 'text-secondary bg-secondary-container/20 rounded-xl px-3 py-1'
-              : 'text-outline hover:text-secondary-fixed'
+              ? 'text-accent bg-accent/15 border border-accent/40 shadow-[0_0_10px_rgba(0,229,255,0.4)] rounded-xl px-3 py-1 font-bold'
+              : 'text-muted-foreground hover:text-accent'
           }`}
         >
           <span className="material-symbols-outlined mb-1 text-[22px]">style</span>
@@ -342,8 +333,8 @@ export default async function DashboardPage({
           href={`/?tab=editor${activeCardId ? `&cardId=${activeCardId}` : ''}`}
           className={`flex flex-col items-center justify-center transition duration-150 ease-out active:scale-[0.97] ${
             tab === 'editor'
-              ? 'text-secondary bg-secondary-container/20 rounded-xl px-3 py-1'
-              : 'text-outline hover:text-secondary-fixed'
+              ? 'text-accent bg-accent/15 border border-accent/40 shadow-[0_0_10px_rgba(0,229,255,0.4)] rounded-xl px-3 py-1 font-bold'
+              : 'text-muted-foreground hover:text-accent'
           }`}
         >
           <span className="material-symbols-outlined mb-1 text-[22px]">contact_page</span>
@@ -353,8 +344,8 @@ export default async function DashboardPage({
           href={`/?tab=qr${activeCardId ? `&cardId=${activeCardId}` : ''}`}
           className={`flex flex-col items-center justify-center transition duration-150 ease-out active:scale-[0.97] ${
             tab === 'qr'
-              ? 'text-secondary bg-secondary-container/20 rounded-xl px-3 py-1'
-              : 'text-outline hover:text-secondary-fixed'
+              ? 'text-accent bg-accent/15 border border-accent/40 shadow-[0_0_10px_rgba(0,229,255,0.4)] rounded-xl px-3 py-1 font-bold'
+              : 'text-muted-foreground hover:text-accent'
           }`}
         >
           <span
@@ -369,19 +360,23 @@ export default async function DashboardPage({
           href={`/?tab=activity${activeCardId ? `&cardId=${activeCardId}` : ''}`}
           className={`flex flex-col items-center justify-center transition duration-150 ease-out active:scale-[0.97] ${
             tab === 'activity'
-              ? 'text-secondary bg-secondary-container/20 rounded-xl px-3 py-1'
-              : 'text-outline hover:text-secondary-fixed'
+              ? 'text-accent bg-accent/15 border border-accent/40 shadow-[0_0_10px_rgba(0,229,255,0.4)] rounded-xl px-3 py-1 font-bold'
+              : 'text-muted-foreground hover:text-accent'
           }`}
         >
           <span className="material-symbols-outlined mb-1 text-[22px]">insights</span>
           <span className="font-label-md text-[10px]">Actividad</span>
         </a>
+      </nav>
+
       {/* Marca Badge Watermark */}
       <div className="fixed bottom-5 right-5 z-40 hidden md:flex items-center gap-2 px-3 py-1.5 rounded-xl bg-card/90 backdrop-blur-md border border-primary/40 shadow-[0_0_15px_rgba(224,64,251,0.4)] opacity-85 hover:opacity-100 transition duration-200 group">
-        <img 
-          src="/marca.png" 
-          alt="Marca Vink" 
-          className="h-7 w-auto object-contain filter drop-shadow-[0_0_6px_rgba(0,229,255,0.6)] group-hover:scale-105 transition-transform" 
+        <Image
+          src="/marca.png"
+          alt="Marca Vink"
+          width={80}
+          height={28}
+          className="h-7 w-auto object-contain filter drop-shadow-[0_0_6px_rgba(0,229,255,0.6)] group-hover:scale-105 transition-transform"
         />
         <span className="text-[11px] font-mono text-accent font-medium tracking-wider">VINK CONNECT</span>
       </div>
